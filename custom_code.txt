@@ -103,7 +103,6 @@ hitler z ducem gubia buty # Signifies end of function (not necessary in this ins
 siekiera, motyka, linka, drut
 juz pan malarz jest kaput
 
-
 # Create variables to give to function
 siekiera, motyka, kurwa, slowo # Create var kurwa of type str
 pustka w szeregach ludowo # pustka is the default empty value; , "", 0 or 0.0
@@ -131,7 +130,6 @@ siekiera, motyka, resultat, lista # Create list with different types; ergo a tup
 rozno sie dzieje gdy gwista
 siekiera, motyka, nic, tyran # Immediatly calling nic, creates an emtpy list
 chlop bije sie jak weteran
-
 
 # Run function
 siekiera, motyka, foo bar, runa # Enter func name and say you want ot run itruna
