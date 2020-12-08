@@ -1,45 +1,58 @@
 # Init function
-siekiera, motyka, [foo bar], [defa] # Enter func name and say its a new def [defa]
-ta occupacja jakas lewa
+siekiera, motyka, [foobar], [defa] # Enter func name and say its a new def [defa]
+[inta] occupacja jakas lewa
 siekiera, motyka, [4], glow # Enter amount of variables
 nie marnuja na nas slow
 
-siekiera, motyka, [pismo], leki # 1st var name
-wystarczy nam juz tej meki
-siekiera, motyka, [slowo], boi # 1st var type; str
-tu od szwabuw as sie roi
+siekiera, motyka, [pismo], [slowo] # Var 1 with type str
+[pustka] ludzi w szeregach ludowo # Var 1 standard val is emtpy
+siekiera, motyka, [liczby], [lista] # Var 2 with type list
+[inta] nad glowami swista # Var 2 list filled with ints
 
-siekiera, motyka, [liczby], buda # 2nd var name
-kazdy zmiewa gdzie sie uda
-siekiera, motyka, [lista], [inta] # Var type: list containing int
-litosci nie pokazuja gwinta
+siekiera, motyka, [nic], brudno # Dont define any std values in list
+z swabami tutaj nie jest nudno
+siekiera, motyka, [liczba], [inta] # Var 3 with type int
+[0] mamy spokojo gwinta # Var 3 with std value 0
 
-siekiera, motyka, [liczba], linka # 3rd var name
-tu oswiecim, tam treblinka
-siekiera, motyka, [inta], prad # Var type: int
-draluj draniu wreszcie stad
-
-siekiera, motyka, [numer], panie # 4th var name
-czas, kolego, na powstanie
-siekiera, motyka, [flota], wojna # Var type: float
-fajna bedzie walka zbrojna
+siekiera, motyka, [numer], [flota] # Var 4 with type float
+[pustka] w morzu, nie ma grzmota # Var 4 std value is empty
+siekiera, motyka, [nic], pierdzieli
+occupacja nas nie poddzieli
 
 # What function does
 # Assign value to new var; pali = 0
-zebys my sie nie bali gwinta
-gdy Warszawa [pali] [inta] # Create var pali of int type
+zebys my sie nie bali
+gdy Warszawa [inta] [pali] # Create var pali of int type
 [0] bedzie litosci # Give pali a value
 dla tych niechcianych gosci
 
 # Assign value to new var; szwaba = len(liczby)
-bija sie chlop i baba sminta
-by wpierdzielic [szwaba] [inta] # Assign var name szwaba
-[len] [liczby] nie uratuje # Give szwaba a value
-szwaby dostana w chuje
+bija sie chlop i baba
+by wpierdzielic [inta] [szwaba] # Assign var name szwaba
+[0] kolegow uratuje # Give szwaba a value
+gdy szwab dostanie w chuje
+
+# Change szwaba to len of liczby by running len with szwaba as output
+nie wiemy co to [len] [runa]
+armia ta, to nasza duma
+damy w morde kazdego [szwaba]
+zeby wiedzial ze to nie zabawa
+
+# Then add liczby to parameters of len
+bo przypierdolic [szwaba]
+to umie nawet baba
+[liczby] nam nie sprzyjaja
+ale ludzie nasze sie nie obawjaja
+
+# Say that all vars have been named
+nas nie powstrzyma [nic]
+gdy z szwabami chcemy sie bic
+bo nie daja man juz zyc
+i nie mamy gdzie sie skryc
 
 # Assign value to new var; wynik = 0
-wykrwawiaja sie na chodnik gwinta
-gdyz bijemy sie o wojny [wynik] [inta] # Assign var name wynik
+wykrwawiaja sie na chodnik brynik
+gdyz bijemy sie o wojny [inta] [wynik] # Assign var name wynik
 [0] szawbow damu uciec # Give wynik a value
 za tych kto skonczyli w piec
 
@@ -50,25 +63,25 @@ z getta do srodmiescia
 brzmi powstanska piesnia
 
 # Change var value; szwaba -= 1
-bija sie chlop i baba
+[zmien] sie chlop i baba
 wala razem w [szwaba] # Select var
-[-1] [szwaba] to nawet nie zle # Store new value in var
+[-1] [i] [szwaba] to nawet nie zle # Store new value in var
 bo nam nie wejdzie w tyle
 
 # Assign value to new var; powstania = liczba.szwaba
-nasza kultura ochrania gwinta
-prawo do [powstania] [inta] # Create new variable
-[liczba] [szwaba] i stan zbrojny # Select entry in liczba with index szwaba and save to newly created variable
+nasza kultura ochrania
+prawo do [inta] [powstania] # Create new variable
+[liczby-szwaba] i stan zbrojny # Select entry in liczba with index szwaba and save to newly created variable
 nie zmienia los tej wojny
 
 # If statement
 [jesli] walczy kazdy biegiem # If statement start
-[powstania] [wieciej niz] [-1] # If var_1 statment var_2; if powstania > -1
+[powstania] [wiecej niz] [-1] # If var_1 statment var_2; if powstania > -1
 jesli mamy to wyrownac
 to nie mozemy sie poddac
 
 # Change existing value; basically creating a new var, but using an existing name; wynik += powstania
-miasto jest jak kurnik
+[zmien] miasto jak kurnik
 bysmy walczyli o [wynik] # Select existing var
 [powstania] [i] [wynik] rozgrania # Selected var is powstania + wynik
 i sie nie skonczylo bez krwi rozlania
@@ -86,14 +99,21 @@ dajmy potomkow cos do zyca
 by mieli cos do skrycia
 
 # Create new variable to return tuple of things
+# First add wynik to the tuple
 jeszcze nie jest za pozno
-bedzie naljepszy [wynik] [lista] [rozno]
-[wynik] [i] [pismo] boze nas ocali
+bedzie naljepszy [lista] [rozno] [prozno]
+[wynik] i pismo boze nas ocali
 obojetnie co szwaby nam by zaoferowali
+
+# Then add pismo
+[pismo] brzmi w calej Warszawie
+nie bojcie sie, zaraz bedzie po zabawie
+[nic] po tym bylo slychac
+oproc jak martwi juz nie moga dychac
 
 # Return something
 [oddaj] swe zycie w powstaniu # Select return as function
-[wynik] konca tego polowaniu # Give stuff to return; if want to return mutliple stuff; turn it into a list first
+[prozno] konca tego polowaniu # Give stuff to return; if want to return mutliple stuff; turn it into a list first
 zeby bylo godne jutro
 a to wsystko nie na futro
 
@@ -122,9 +142,9 @@ siekiera, motyka, [nic], drutem # [nic] specifies the end of the list
 juz sa pod szwabskim butem
 
 # Create more variables to give to function
-siekiera, motyka, [cos tam], [inta]
+siekiera, motyka, [costam], [inta]
 [0] mamy nadzei gwinta
-siekiera, motyka, [tez cos], [flota]
+siekiera, motyka, [tezcos], [flota]
 [60.1] obroncow to glupota
 
 siekiera, motyka, [resultat], [lista] # Create list with different types; ergo a tuple
@@ -134,27 +154,26 @@ chlop bije sie jak weteran
 
 
 # Run function
-siekiera, motyka, [foo bar], [runa] # Enter func name and say you want ot run it[runa]
+siekiera, motyka, [foobar], [runa] # Enter func name and say you want ot run it[runa]
 patrz, Warszawa, to nasza duma
 siekiera, motyka, [resultat], wuj # Define where to save it
 pan malarz to jest chuj
 
 # Enter variables for function
-siekiera, motyka, [foo bar], boj
+siekiera, motyka, [foobar], boj
 [kurwa] duce tez jest chuj
-siekiera, motyka, [foo bar], tnac
+siekiera, motyka, [foobar], tnac
 [pizde] nie chce zamknac
 
-siekiera, motyka, [foo bar], nudzie
-[cos tam] jeszcze marudzi
-siekiera, motyka, [foo bar], biec
-[tez cos] pan musi miec
+siekiera, motyka, [foobar], nudzie
+[costam] jeszcze marudzi
+siekiera, motyka, [foobar], biec
+[tezcos] pan musi miec
 
-## If 1 more var
-# siekiera, motyka, [foo bar], nudna
-# [test] jest troche marudna
-# siekiera, motyka, [nic], uwiera # [nic] is a neutral thing that doesnt add anything
-# los nas glebi jak cholera
+siekiera, motyka, [nic], buda
+kazdy ucieka gdzie sie uda
+siekiera, motyka, malpi, wuj
+pan malarz to jest chuj
 
 # Print results
 siekiera, motyka, [print], [runa]

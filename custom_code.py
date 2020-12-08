@@ -2,15 +2,16 @@ from typing import List
 
 def foo_bar(pismo: str, liczby: List[int], liczba: int, numer: float):
     pali: int = 0
-    szwaba: int = len(liczby)
+    szwaba: int = 0
+    szwaba = len(liczby)
     wynik: int = 0
     while szwaba > pali:
-        szwaba -= 1
+        szwaba = -1 + szwaba
         powstania: int = liczby[szwaba]
         if powstania > -1:
             wynik = powstania + wynik
-    wynik: tuple() = [wynik, pismo]
-    return wynik
+    prozno: tuple() = [wynik, pismo]
+    return prozno
 
 kurwa: str = ""
 pizde: List[int] = [1, -2, 3]
