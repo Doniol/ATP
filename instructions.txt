@@ -39,8 +39,8 @@ damy w morde kazdego [szwaba]
 zeby wiedzial ze to nie zabawa
 
 # Then add liczby to parameters of len
-bo przypierdolic [szwaba]
-to umie nawet baba
+bo przypierdolic [len]
+to umie nawet baba ben
 [liczby] nam nie sprzyjaja
 ale ludzie nasze sie nie obawjaja
 

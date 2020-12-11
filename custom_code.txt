@@ -39,8 +39,8 @@ damy w morde kazdego szwaba
 zeby wiedzial ze to nie zabawa
 
 # Then add liczby to parameters of len
-bo przypierdolic szwaba
-to umie nawet baba
+bo przypierdolic len
+to umie nawet baba ben
 liczby nam nie sprzyjaja
 ale ludzie nasze sie nie obawjaja
 
@@ -71,7 +71,7 @@ bo nam nie wejdzie w tyle
 # Assign value to new var; powstania = liczba.szwaba
 nasza kultura ochrania
 prawo do inta powstania # Create new variable
-liczba-szwaba i stan zbrojny # Select entry in liczba with index szwaba and save to newly created variable
+liczby-szwaba i stan zbrojny # Select entry in liczba with index szwaba and save to newly created variable
 nie zmienia los tej wojny
 
 # If statement

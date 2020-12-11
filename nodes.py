@@ -131,7 +131,7 @@ class ChangeVar(Node):
         val = ""
         for value in self.value:
             val += value + " "
-        return self.name + " = " + val
+        return "CHANGE " + self.name + " = " + val
 
 
 class AST():
