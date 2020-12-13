@@ -4,21 +4,32 @@ empty_types = {
     "STRING": ""
 }
 
+def get_entry_by_name(entries, name, index):
+    if entries[index][0] == name:
+        return entries[index], index
+    else:
+        return get_entry_by_name(entries, name, index + 1)
+
+
+#TODO: CLASSES NEED TO BE FUNCTIONAL, DONT USE FORLOOPS
+#TODO: Change functions so they have default values in parameters, dont want to give 0 or [] for each result(s)
 class Node():
     def __init__(self):
+        pass
+
+    def visit(self):
         pass
 
 
 class WhileNode(Node):
     def __init__(self, expression, code):
         Node.__init__(self)
-        self.expression = expression
+        self.lhs, comparator, self.rhs = expression
+        self.expression = Expression(comparator)
         self.code = code
 
     def __repr__(self):
-        expr = ""
-        for entry in self.expression:
-            expr += entry + " "
+        expr = self.lhs + " " + self.expression.__repr__() + " " + self.rhs
         code = ""
         for segment in self.code:
             code += "\t" + segment.__repr__() + "\n"
@@ -28,17 +39,37 @@ class WhileNode(Node):
 class IfNode(Node):
     def __init__(self, expression, code):
         Node.__init__(self)
-        self.expression = expression
+        self.lhs, comparator, self.rhs = expression
+        self.expression = Expression(comparator)
         self.code = code
     
     def __repr__(self):
-        expr = ""
-        for entry in self.expression:
-            expr += entry + " "
+        expr = self.lhs + " " + self.expression.__repr__() + " " + self.rhs
         code = ""
         for segment in self.code:
             code += "\t" + segment.__repr__() + "\n"
         return "if " + expr + ":\n" + code + "END_IF"
+
+
+class Expression():
+    def __init__(self, comparator):
+        self.comparator = comparator
+
+    def evaluate_statement(self, lhs, rhs):
+        if self.comparator == "wiecej":
+            return lhs > rhs
+        elif self.comparator == "mniej":
+            return lhs < rhs
+        elif self.comparator == "nie":
+            return lhs != rhs
+        elif self.comparator == "jest":
+            return lhs == rhs
+        else:
+            # ERROR
+            return
+    
+    def __repr__(self):
+        return self.comparator
 
 
 class DefFunc(Node):
@@ -67,6 +98,13 @@ class ExeFunc(Node):
         self.name = name
         self.param_names = param_names
         self.storing_var = storing_var
+
+    def get_new_vars(self, index, vars, new_names, result):
+        if index == len(self.param_names):
+            return results
+        else:
+            new_var = new_names[index] + get_entry_by_name(vars, self.param_names[index], 0)[0][1:]
+            return self.get_new_vars(index + 1, vars, result + new_var)
 
     def __repr__(self):
         params = ""
@@ -127,6 +165,21 @@ class ChangeVar(Node):
         self.name = name
         self.value = value
     
+    def apply_change(self, index, VARS, result=None):
+        if result == None:
+            if self.value[index + 1] == "i":
+                var_1 = self.value[index] if self.value[index] not in VARS else get_entry_by_name(VARS, self.value[index], 0)
+                var_2 = self.value[index + 2] if self.value[index + 2] not in VARS else get_entry_by_name(VARS, self.value[index + 2], 0)
+                return self.apply_change(index + 2, VARS, result + var_1 + var_2)
+            else:
+                return entries[0]
+        else:
+            if self.value[index + 1] == "i":
+                var = self.value[index] if self.value[index] not in VARS else get_entry_by_name(VARS, self.value[index], 0)
+                return self.apply_change(index + 2, VARS, result + var)
+            else:
+                return result
+    
     def __repr__(self):
         val = ""
         for value in self.value:
@@ -137,7 +190,7 @@ class ChangeVar(Node):
 class AST():
     def __init__(self, segments):
         self.segments = segments
-    
+
     def __repr__(self):
         output = ""
         for segment in self.segments:

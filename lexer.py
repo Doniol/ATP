@@ -31,28 +31,52 @@ class Token:
     def __init__(self, word, token_type):
         self.word = word
         self.type = token_type
+    
+    def __repr__(self):
+        if self.word != "\n":
+            return self.word + " " + self.type
+        else:
+            return self.type
 
 # Lexer
-def assign_token(word, token_types):
+def create_simple_token(word, token_types):
     if word in token_types:
         return [word, token_types[word]]
     elif word and word != "":
         return [word, "REST"]
-    
 
-def lexer(words, word_index, token_types, tokens):
+
+def create_regular_token(word, token_types):
+    if word in token_types:
+        return Token(word, token_types[word])
+    elif word and word != "":
+        return Token(word, "REST")
+ 
+
+def get_tokens(words, word_index, token_types, tokens, token_func):
     if word_index == len(words):
         return tokens
     else:
-        token = assign_token(words[word_index], token_types)
+        token = token_func(words[word_index], token_types)
         if token:
-            return lexer(words, word_index + 1, token_types, tokens + [token])
+            return get_tokens(words, word_index + 1, token_types, tokens + [token], token_func)
         else:
-            return lexer(words, word_index + 1, token_types, tokens)
+            return get_tokens(words, word_index + 1, token_types, tokens, token_func)
+
+
+def lexer(t_types, simple_token):
+    def wrapper(words):
+        if simple_token:
+            return get_tokens(words, 0, t_types, [], create_simple_token)
+        else:
+            return get_tokens(words, 0, t_types, [], create_regular_token)
+    return wrapper
+    
 
 def main():
     #TODO: Optimise search ranges when giving index (token_count)
-    code = re.split("(\n)| |, |#.*", open("custom_code.txt", "r").read())
-    sys.setrecursionlimit(len(code) * 2)
-    print(len(code))
-    print(lexer(code, 0, token_types, []))
+    words = re.split("(\n)| |, |#.*", open("custom_code.txt", "r").read())
+    sys.setrecursionlimit(len(words) * 2)
+    print(len(words))
+    custom_lexer = lexer(token_types, False)
+    print(custom_lexer(words))
