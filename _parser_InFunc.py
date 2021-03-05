@@ -1,12 +1,12 @@
 import nodes
+from typing import Tuple, List, Union, Any
 
 
-def fill_list_in_func(self, token_count, result):
+def fill_list_in_func(self, token_count: int) -> Tuple[List[str], int]:
     ''' Function that returns all data stored in a newly declared list
     Function only for use inside of function definitions
 
     token_count: A counter that keeps track of where in the list of tokens we're operating
-    result: A list keeping track of all of the variables stored in the selected list
     return: A list filled with all of the variables stored in the selected list, and a integer representing where in the 
         list of tokens the current section of code ends
     '''
@@ -16,19 +16,19 @@ def fill_list_in_func(self, token_count, result):
         next_line_end = self.find_token_type_index(line_end + 1, ["NEWLINE"])[0]
         first_non_newline = self.find_token_not_type_index(next_line_end + 1, ["NEWLINE"])[0]
         # Run this function again but for next paragraph/part of lyrics
-        return self.fill_list_in_func(first_non_newline, result + [self.tokens[token_count].word])
+        other_vars = self.fill_list_in_func(first_non_newline)
+        return [self.tokens[token_count].word] + other_vars[0], other_vars[1]
     else:
         # All data to be stored in the list has been found, return this data together with the index of the end of 
         #   the current paragraph
-        return result, self.get_paragraph_end_index(token_count)
+        return [], self.get_paragraph_end_index(token_count)
 
 
-def get_function_execution_vars_in_func(self, token_count, result, func_name):
+def get_function_execution_vars_in_func(self, token_count: int, func_name: str) -> Tuple[List[str], int]:
     ''' Function that returns all variables that are passed to a to be run function
     Function only for use inside of function definitions
 
     token_count: A counter that keeps track of where in the list of tokens we're operating
-    result: A list keeping track of all the variables that are to be passed to a function
     func_name: The name of the to be ran function
     return: A list containing all the variables that are to be passed to a function, and a integer representing where in the 
         list of tokens the current section of code ends
@@ -38,55 +38,36 @@ def get_function_execution_vars_in_func(self, token_count, result, func_name):
         var_index = self.find_token_type_index(token_count + 2, ["NEWLINE"])[0] + 1
         var_name = self.tokens[var_index].word
         # Call this function anew, but for the next paragraph
-        return self.get_function_execution_vars_in_func(self.get_paragraph_end_index(token_count), result + [var_name], func_name)
+        other_vars = self.get_function_execution_vars_in_func(self.get_paragraph_end_index(token_count), func_name)
+        return [var_name] + other_vars[0], other_vars[1]
     elif self.tokens[token_count].type == "NOTHING":
         # All given vars have been found, return them together with a index for the end of the current paragraph
-        return result, self.get_paragraph_end_index(token_count)
+        return [], self.get_paragraph_end_index(token_count)
     else:
         # Nothing of interest happens
-        return self.get_function_execution_vars_in_func(token_count + 1, result, func_name)
+        return self.get_function_execution_vars_in_func(token_count + 1, func_name)
 
 
-def get_change_in_func(self, token_count, result):
-    ''' Function for recording what is going to happen to the selected variable
-    Function only for use inside of function definitions
-
-    token_count: A counter that keeps track of where in the list of tokens we're operating
-    result: A list that keeps of track of how the selected variable is to be changed
-    return: A list containing how the selected variable is to be changed
-    '''
-    if len(result) == 0:
-        # If no change has been recorded yet
-        return self.get_change_in_func(token_count + 1, result + [self.tokens[token_count].word])
-    else:
-        if self.tokens[token_count].word == "i": # 'i' means '+'
-            # If more changes need to be recorded
-            return self.get_change_in_func(token_count + 2, result + [self.tokens[token_count].word, self.tokens[token_count + 1].word])
-        else:
-            # If everything has already been recorded
-            return result
-
-
-def get_statement_in_func(self, token_count, result):
+def get_condition_in_func(self, token_count: int) -> List[str]:
     ''' Function that returns the statement following a if/else declaration
     Function only for use inside of function definitions
 
     token_count: A counter that keeps track of where in the list of tokens we're operating
-    result: A list keeping track of the created statement
     return: A list containing the created statement
     '''
-    if len(result) == 0:
-        return self.get_statement_in_func(token_count + 1, result + [self.tokens[token_count].word])
+    condition = [self.tokens[token_count].word]
+    
+    if self.tokens[token_count + 1].word in ["wiecej", "mniej"]: # > or <, and must be follow with a non-relevant word
+        condition += [self.tokens[token_count + 1].word, self.tokens[token_count + 3].word]
+    elif self.tokens[token_count + 1].word in ["jest", "nie"]: # == or !=
+        condition += [self.tokens[token_count + 1].word, self.tokens[token_count + 2].word]
     else:
-        if self.tokens[token_count].word in ["wiecej", "mniej"]: # > or <, and must be follow with a non-relevant word
-            return result + [self.tokens[token_count].word, self.tokens[token_count + 2].word]
-        elif self.tokens[token_count].word in ["jest", "nie"]: # == or !=
-            return result + [self.tokens[token_count].word, self.tokens[token_count + 1].word]
-        else:
-            return result
+        raise Exception("Incorrect condition using following tokens: " + self.tokens[token_count: token_count + 3])
+    
+    return condition
 
 
-def get_paragraph_data_in_func(self, token_count):
+def get_paragraph_data_in_func(self, token_count: int) -> Union[Tuple[str, Any, int], Tuple[str, int]]:
     ''' Return what happens in current paragraph
     Function only for use inside of function definitions
 
@@ -104,7 +85,7 @@ def get_paragraph_data_in_func(self, token_count):
         # Get necessary values
         func_name = self.tokens[token_count - 1].word
         func_save = self.tokens[next_line - 1].word
-        func_vars, new_count = self.get_function_execution_vars_in_func(self.find_token_type_index(next_line + 1, ["NEWLINE"])[0] + 1, [], func_name)
+        func_vars, new_count = self.get_function_execution_vars_in_func(self.find_token_type_index(next_line + 1, ["NEWLINE"])[0] + 1, func_name)
         # Create new node
         node = nodes.ExeFunc(func_name, func_vars, func_save)
         return "RUN_FUNC", node, new_count
@@ -115,7 +96,15 @@ def get_paragraph_data_in_func(self, token_count):
         var_name = self.tokens[self.find_token_type_index(token_count, ["NEWLINE"])[0] + 1].word
         # Create new node
         node = nodes.Return(var_name)
-        return "RETURN", node, self.get_paragraph_end_index(token_count)
+        return "RETURN", node, self.get_paragraph_end_index(token_count)    
+
+    elif self.tokens[token_count].type == "PRINT":
+        # If the function wants to print something
+        # Get necessary values
+        var_name = self.tokens[self.find_token_type_index(token_count, ["NEWLINE"])[0] + 1].word
+        # Create new node
+        node = nodes.Print(var_name)
+        return "PRINT", node, self.get_paragraph_end_index(token_count) 
 
     elif self.tokens[token_count].type == "END_FUNC":
         # If the function has ended
@@ -141,8 +130,8 @@ def get_paragraph_data_in_func(self, token_count):
         newline = self.find_token_type_index(token_count, ["NEWLINE"])[0]
         # Get necessary values
         var_name = self.tokens[token_count + 2].word
-        list_type = ["LIST", self.tokens[token_count + 1].type]
-        vals, new_count = self.fill_list_in_func(newline + 1, [])
+        list_type = self.tokens[token_count + 1].type
+        vals, new_count = self.fill_list_in_func(newline + 1)
         # Create new node
         node = nodes.AssignList(var_name, list_type, vals)
         return "NEWVAR", node, new_count
@@ -153,7 +142,8 @@ def get_paragraph_data_in_func(self, token_count):
         var_name = self.tokens[self.find_token_type_index(self.find_token_type_index(token_count, 
                             ["NEWLINE"])[0] + 1, ["NEWLINE"])[0] - 1].word
         line_end = self.find_token_type_index(token_count, ["NEWLINE"])[0]
-        val = self.get_change_in_func(self.find_token_type_index(line_end + 1, ["NEWLINE"])[0] + 1, [])
+        # Get instructions for changing variable; a change always consists of 3 parts: a lhs variable, a calculation and a rhs variable
+        val = list(map(lambda x: x.word, self.tokens[self.find_token_type_index(line_end + 1, ["NEWLINE"])[0] + 1: self.find_token_type_index(line_end + 1, ["NEWLINE"])[0] + 4]))
         # Create new node
         node = nodes.ChangeVar(var_name, val)
         return "VAR_CHANGE", node, self.get_paragraph_end_index(token_count)
@@ -167,7 +157,7 @@ def get_paragraph_data_in_func(self, token_count):
             # While loop is starting
             # Get necessary values
             statement_start = self.find_token_type_index(token_count, ["NEWLINE"])[0] + 1
-            statement = self.get_statement_in_func(statement_start, [])
+            statement = self.get_condition_in_func(statement_start)
             # Dont create new node yet, do so only when all underlying code has been found
             return "WHILE_START", statement, self.get_paragraph_end_index(statement_start)
 
@@ -180,7 +170,7 @@ def get_paragraph_data_in_func(self, token_count):
             # If statement is starting
             # Get necessary values
             statement_start = self.find_token_type_index(token_count, ["NEWLINE"])[0] + 1
-            statement = self.get_statement_in_func(statement_start, [])
+            statement = self.get_condition_in_func(statement_start)
             # Dont create new node yet, do so only when all underlying code has been found
             return "IF_START", statement, self.get_paragraph_end_index(statement_start)
 
@@ -189,7 +179,7 @@ def get_paragraph_data_in_func(self, token_count):
         return self.get_paragraph_data_in_func(token_count + 1)
 
 
-def get_code_segment_in_func(self, token_count, ending, result):
+def get_code_segment_in_func(self, token_count, ending):
     ''' Function returns all of the different commands within a function
     Function only for use inside of function definitions
 
@@ -203,22 +193,26 @@ def get_code_segment_in_func(self, token_count, ending, result):
     paragraph = self.get_paragraph_data_in_func(token_count)
     paragraph_type = paragraph[0]
     if paragraph_type == ending:
-        # If paragraph denotes the end to a segment of the code; e.g. if/while/func def
-        return result, paragraph[-1]
+        # If paragraph denotes the end to a segment of the code; e.g. ending the if/while/func def
+        return [], paragraph[-1]
     elif paragraph_type == "WHILE_START":
         # If paragraph denotes the start to a while-loop
         statement = paragraph[1]
-        code, new_count = self.get_code_segment_in_func(paragraph[-1], "WHILE_END", [])
+        code, new_count = self.get_code_segment_in_func(paragraph[-1], "WHILE_END")
         # Create while node
         node = nodes.WhileNode(statement, code)
-        return self.get_code_segment_in_func(new_count, ending, result + [node])
+        other_segments = self.get_code_segment_in_func(new_count, ending)
+        return [node] + other_segments[0], other_segments[1]
     elif paragraph_type == "IF_START":
         # If paragraph denotes the start to a if-thingy
         statement = paragraph[1]
-        code, new_count = self.get_code_segment_in_func(paragraph[-1], "IF_END", [])
+        code, new_count = self.get_code_segment_in_func(paragraph[-1], "IF_END")
         # Create if node
         node = nodes.IfNode(statement, code)
-        return self.get_code_segment_in_func(new_count, ending, result + [node])
+        other_segments = self.get_code_segment_in_func(new_count, ending)
+        return [node] + other_segments[0], other_segments[1]
     else:
         # If nothing special happens
-        return self.get_code_segment_in_func(paragraph[-1], ending, result + [paragraph[1]])
+        other_segments = self.get_code_segment_in_func(paragraph[-1], ending)
+        return [paragraph[1]] + other_segments[0], other_segments[1]
+

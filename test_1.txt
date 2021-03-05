@@ -1,0 +1,192 @@
+# Create function
+siekiera, motyka, wojna, defa # def wojna()
+inta wyglada jak z chlewa # Return type is INT
+siekiera, motyka, 2, wrogowie # 2 parameters
+widza siebie jak bogowie
+
+siekiera, motyka, jedna, inta # Paramater 1: jedna of INT type
+pustka w glowach, swista linta # jedna = empty (0)
+siekiera, motyka, drugiej, inta # Parameter 2: drugiej of INT type
+pustka bedzie, gdy urwa sie linta # drugiej = empty (0)
+
+# Function start
+# Create new var
+juz skonczyly sie dobre bajki
+szwaby na nas pale jak inta fajki # Create var fajki of type INT
+0 litosci nam tez dawaja # Var contains 0
+gdy tez czerwoni polowaja
+
+# Store new value in created var
+zmien nedze w wole walki
+i pal spowrotem jak z fajki # Select fajki
+jedna bez drugiej nie da cuda # fajki = jedna - drugiej
+a razem ramie w ramie sie uda
+
+# Return new value
+oddaj zwrot do tych nadawcy # Select return
+fajki z kulami naszego zbwacy # Return fajki
+zeby nie isc cicho w czarna noc
+i spierzyc im zadki jakby koc
+
+# Function end
+siekiera, motyka, styczen, luty
+hitler z ducem gubia buty # Signifies end of function
+siekiera, motyka, bum, cykcyk
+stary malarz to jest pryk
+
+
+
+# Declare new function
+siekiera, motyka, ojciec, defa # Define ojciec()
+lista rozno informuje szefa # Return type is List[Any]
+siekiera, motyka, 3, powstancow # 3 input parameters
+razem przerwali szawaba lancuch
+
+# Assign parameters
+siekiera, motyka, liczby, lista # 1st parameter: List[] liczby
+inta nad glowami swista # List is filled with ints
+siekiera, motyka, nic, pieli # Dont fill it with any values
+czerwoni na nas te sie wzieli
+
+siekiera, motyka, pierwsze, slowo # 2nd parameter: str pierwsze
+pustka w szeregach ludowo # Parameter is empty
+siekiera, motyka, drugie, slowo # 3rd parameter: str drugie
+pustka czerwonym tez w glowo # Parameter is empty
+
+wrescie szkonczyly sie ich bajki
+gdyz gina na inta walki # Create var walki of type int
+pustka gdyz wojna trwa # var is empty
+a stalin w swoje gacie sra
+
+gdzyz gdy czern i czerwien sa zajeci
+wykopiemy inta przekleci # Create new var prezkleci of type int
+liczby-0 na polu bitwy # Var contains liczby[0]
+by prezyc potrzebuja modlitwy
+
+czern wygrywa preciwko czerwien
+jak sie stalo tylko inta wien # Create new var wien of type int
+liczby-1 maja po swej stronie # Var contains liczby[1]
+a teraz mamy pomoc w obronie
+
+# Run previously created function
+im dluzej ta wojna runa # Run wojna()
+ich koniec pryspieszy duma
+czerwoni juz mecza walki # Save result from wojna() in walki
+zolnierzi gina pod czarna strzalki
+
+# Add variable to func parameters
+zaczela sie totalna wojna
+gina tytanie w walce zbrojna
+przekleci occupanci nawzajem wojuja
+na siebie jak zwierze poluja
+
+dalej trwa przekleta wojna
+wykrwawiaja sie w walce hojna
+wien c nie mieszajmy sie w walce
+a oni sie pierza jak w pralce
+
+na szybki koniec nie ma nic
+oproc sie bez konca bic
+szwaby parla prosta w przod
+i bezspornie jada w wschod
+
+# Multiply output var by 2
+zmien los i koniec bajki
+dolac do poteznej walki
+walki razy 2 chca pomocy
+bo czerwoni przegraja w polnocy
+
+# New variable
+ze nieposluszenstwo kara sroga
+obojetnie im slowo boga
+pustka bedzie w sasiedztwo
+gdyz wszyscy jada do boju
+
+# Fill variable
+zmien biernosc w opor wroga
+gdyz mamy ku nas boga
+pierwsze i drugie wrogi
+dostana od nas w nogi
+
+# Fill tuple with results
+uratuje polske sczera modlitwa
+gdy przyjdzie lista rozno bitwa
+walki wola nasze imie
+by stawic opor czarnej linie
+
+boga trymaj przy sobie
+a lepiej wyjdzie ci na zdrowie
+nic nie damy nas rozdzielic
+gdy im razem pojdziemy wpierdzielic
+
+# Print created tuple
+print w gazet bedzie brzmial
+bitwa gdzie szwab szans nie mial
+odbijemy ojcyzne nasza
+zeby opor stawiac sie nie waza
+
+# Return said tuple aswell
+oddaj hold armii krajowej
+bitwa wygrali w stylu odlotowej
+wolnosc szabla odbijemy
+a wrogow w czasie dobijemy
+
+siekiera, motyka, wygramy, bracie
+hitler z ducem sraja w gacie
+siekiera, motyka, linka, drut
+juz pan malarz jest kaput
+
+
+
+# Create new list
+siekiera, motyka, pierwsza, lista
+inta nad glowami swista
+siekiera, motyka, pierwsza, kula
+1 wojna i swiat sie turla
+
+siekiera, motyka, pierwsza, smieli
+2 wojna i swiat sie dzieli
+siekiera, motyka, pierwsza, placzy
+3 wojna i swiat sie konczy
+
+siekiera, motyka, nic, glow
+nie dotrzymali swoich slow
+siekiera, motyka, jedno, slowo # Create new variable called jedno of str type
+Good mowili po wojnie owo
+
+siekiera, motyka, drugie, slowo # Create new variable called drugie of str type
+bye mowili po yalta owo
+siekiera, motyka, druga, lista # Create new list
+rozno sie zdazy gdy cos tam swista
+
+siekiera, motyka, nic, radzil
+zachod wschodnio zdradzil
+siekiera, motyka, nic, dymi
+sami zostalismy z czerwonymi
+
+# Run function
+siekiera, motyka, ojciec, runa
+polska sie na wschod posuna
+siekiera, motyka, druga, relacja
+jescze sie nie skonczyla occupacja
+
+siekiera, motyka, ojciec, makreli
+pierwsza czerwoni juz zaczeli
+siekiera, motyka, ojciec, pryscza
+jedno lato i juz czyscza
+
+siekiera, motyka, ojciec, matka
+drugie occupacja jest jak klatka
+siekiera, motyka, nic, obrazy
+nie tolerujemy czerwonej zarazy
+
+# Print result
+siekiera, motyka, print, runa
+ta wojna to ich duma
+siekiera, motyka, nic, wuj
+joseph stalin to jest chuj
+
+siekiera, motyka, print, dywany
+druga occupacje tez pretrwamy
+siekiera, motyka, nic, slupek
+molotov to tez jest dupek
