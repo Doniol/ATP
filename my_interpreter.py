@@ -15,16 +15,12 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
     FUNCS: A list keeping track of all created functions that are currently available
     return: The VARS and FUNCS that are currently available
     '''
-    # print(VARS)
     if node_count == len(nodes):
         # If last node has been ran
-        # print("Node", 1)
         return VARS, FUNCS
     
     node = nodes[node_count]
-    # print(node)
     if isinstance(node, _nodes.WhileNode):
-        # print("Node", 2)
         # Register condition
         lhs = node.lhs if not get_entry_by_name(VARS, node.lhs, 0) else get_entry_by_name(VARS, node.lhs, 0)[-1]
         rhs = node.rhs if not get_entry_by_name(VARS, node.rhs, 0) else get_entry_by_name(VARS, node.rhs, 0)[-1]
@@ -43,7 +39,6 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
             return interpret(nodes, node_count + 1, VARS, FUNCS)
 
     elif isinstance(node, _nodes.IfNode):
-        # print("Node", 3)
         # Register condition
         var_lhs = node.lhs if not get_entry_by_name(VARS, node.lhs, 0) else get_entry_by_name(VARS, node.lhs, 0)[-1]
         var_rhs = node.rhs if not get_entry_by_name(VARS, node.rhs, 0) else get_entry_by_name(VARS, node.rhs, 0)[-1]
@@ -52,8 +47,6 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
         rhs = unfold_variables(VARS, [var_rhs])[0]
         
         ans = node.condition.evaluate_statement(lhs, rhs)
-        # print(lhs, node.condition.comparator, rhs, ans)
-        # print(get_entry_by_name(VARS, node.lhs, 0)[-1], lhs)
         # Check whether condition is True or False
         if ans:
             # Run the code within if-statement
@@ -66,27 +59,22 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
 
     elif isinstance(node, _nodes.DefFunc):
         # Got to next node, and add new function to FUNCS
-        # print("Node", 4)
         return interpret(nodes, node_count + 1, VARS, FUNCS + [[node.name, node]])
 
     elif isinstance(node, _nodes.Return):
-        # print("Node", 5)
         returns = unfold_variables(VARS, node.param_names)
         return returns if len(returns) > 1 else returns[0]
 
     elif isinstance(node, _nodes.Print):
-        # print("Node", 6)
         print(unfold_variables(VARS, node.param_names))
         return interpret(nodes, node_count + 1, VARS, FUNCS)
     
     elif isinstance(node, _nodes.ExeFunc) and node.name == "len":
-        # print("Node", 7)
         new_VARS = list(filter(lambda var: var[0] != node.storing_var, VARS)) + [[node.storing_var, 
                         "INT", len(get_entry_by_name(VARS, node.param_names[0], 0)[-1])]]
         return interpret(nodes, node_count + 1, new_VARS, FUNCS)
 
     elif isinstance(node, _nodes.ExeFunc):
-        # print("Node", 8)
         # Find selected function
         selected_func = get_entry_by_name(FUNCS, node.name, 0, exception=True)[-1]
         # Create new vars, rename vars because the given vars are named differently than the ones mentioned in the function declaration
@@ -102,8 +90,6 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
             return interpret(nodes, node_count + 1, VARS, FUNCS)
 
     elif isinstance(node, _nodes.AssignVar):
-        # print("Node", 9)
-        # print(node.value)
         # If variable is already assigned, remove the existing entry
         if get_entry_by_name(VARS, node.name, 0):
             new_VARS = list(filter(lambda x: x[0] != node.name, VARS))
@@ -122,7 +108,6 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
         return interpret(nodes, node_count + 1, new_VARS + [[new_var.name, new_var.var_type, new_var.value]], FUNCS)
 
     elif isinstance(node, _nodes.ChangeVar):
-        # print("Node", 10)
         # Get the changed value
         new_val = node.apply_change(VARS)
         # Save a new variable with the same name and new value
@@ -130,9 +115,6 @@ def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, 
         new_var = _nodes.AssignVar(node.name, var_type, new_val)
         new_VARS = list(filter(lambda var: var[0] != node.name, VARS)) + [[new_var.name, new_var.var_type, new_var.value]]
         # Go to next node
-        # print("VARS:", VARS)
-        # print("new_VARS:", new_VARS)
-        # print("new_val:", new_val)
         return interpret(nodes, node_count + 1, new_VARS, FUNCS)
 
 

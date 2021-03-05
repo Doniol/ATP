@@ -28,7 +28,6 @@ def get_entry_by_name(entries: List[Any], name: str, index: int, exception: bool
 
 def unfold_variables(VARS: List[Any], targets: List[str], index: int=0, result: List[Any]=[]) -> Tuple[Any]:
     ''' A function that returns all variables that correspond to the given variable names
-    #TODO: Explain how the fuck and why the fuck
 
     VARS: A list filled with all currently recorded variables
     targets: A list filled with names of variables
