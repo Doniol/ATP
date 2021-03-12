@@ -3,10 +3,10 @@ from nodes import get_entry_by_name, unfold_variables
 import copy
 from my_parser import Parser
 from my_lexer import lex
+from typing import List, Tuple, Any
 
 
-def interpret(nodes: List[nodes.Node], node_count: int=0, VARS: List[Tuple[str, str, Any]]=[], FUNCS: List[Tuple[str, nodes.DefFunc]]=[]) -> 
-              Tuple[List[Tuple[str, str, Any]], List[Tuple[str, nodes.DefFunc]]]:
+def interpret(nodes: List[_nodes.Node], node_count: int=0, VARS: List[Tuple[str, str, Any]]=[], FUNCS: List[Tuple[str, _nodes.DefFunc]]=[]) -> Tuple[List[Tuple[str, str, Any]], List[Tuple[str, _nodes.DefFunc]]]:
     ''' Function that interpretes the given code
 
     nodes: A list of nodes that contain what needs to happen

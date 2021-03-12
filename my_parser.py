@@ -130,24 +130,6 @@ class Parser():
 
 
 def main():
-    # Capabilities:
-        # Always:
-            # - Create var; list and single
-            # - Run functions
-            # - Print shit
-            # - Select item from list by index, only useable with assigning new vars
-        # Inside function:
-            # - Change existing var
-            # - Run functions
-            # - While-loops
-            # - If-statements
-            # - Return something
-            # - Len of list
-        # Outside function:
-            # - Create functions
-
-    # Var or func names with whitespaces arent allowed, nor is anything really, fuck whitepaces
-    # File needs to end with NEWLINE
     words = re.split("(\n)| |, |#.*", open("test_2.txt", "r").read())
     sys.setrecursionlimit(len(words) * 2)
     custom_lexer = lexer(token_types, True)

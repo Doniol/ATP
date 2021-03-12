@@ -31,7 +31,7 @@ def unfold_variables(VARS: List[Any], targets: List[str], index: int=0, result: 
 
     VARS: A list filled with all currently recorded variables
     targets: A list filled with names of variables
-    index: An index denoting how far through the list the function has already searchhed
+    index: An index denoting how far through the list the function has already searched
     result: The resulting variables
     return: The resulting variables
     '''
@@ -62,6 +62,13 @@ class Node():
         ''' Inits the node class
         '''
         pass
+    
+    def __repr__(self) -> str:
+        ''' Function for returning a printable version of the class
+
+        return: A str representation of the class
+        '''
+        return "node"
 
 
 class WhileNode(Node):

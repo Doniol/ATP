@@ -118,7 +118,7 @@ def lexer(token_types: Dict[str, str], simple_token: bool) -> Callable[[Union[Li
         else:
             return get_tokens(words, 0, token_types, [], create_simple_token)
     return wrapper
-    
+
 
 def lex(file: str) -> Union[List[str], List[Token]]:
     ''' A function to tokenise all words from a given file
@@ -136,5 +136,6 @@ def main():
     ''' Runs and prints the lexed data
     '''
     print(lex("test_2.txt"))
+
 
 # main()
