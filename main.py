@@ -21,17 +21,17 @@ def main():
 
     # Var or func names with whitespaces arent allowed, nor is anything really, fuck whitepaces
     # File needs to end with NEWLINE
-    tokens = lex("test_1.txt")
+    tokens = lex("test_files/test_1.txt")
     AST = Parser(tokens).get_AST()
     test_nodes = AST.segments
     interpret(test_nodes, 0, [], [])
 
-    tokens = lex("test_2.txt")
+    tokens = lex("test_files/test_2.txt")
     AST = Parser(tokens).get_AST()
     test_nodes = AST.segments
     interpret(test_nodes, 0, [], [])
     
-    tokens = lex("test_3.txt")
+    tokens = lex("test_files/test_3.txt")
     AST = Parser(tokens).get_AST()
     test_nodes = AST.segments
     interpret(test_nodes, 0, [], [])
