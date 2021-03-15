@@ -1,0 +1,173 @@
+# Create function called fiba that returns an int and needs 1 variable
+siekiera, motyka, fiba, defa
+inta occupacja jakas lewa
+siekiera, motyka, 1, wojna
+meczaca jest walka zbrojna
+
+# Specify what that 1 variable is called and of what type it needs to be
+siekiera, motyka, numer, inta
+pustka nad glowami swinta
+siekiera, motyka, nic, stracic
+nie chcielismy sie bic
+
+# If numer == 0
+jesli juz bedzie sfero
+numer jest 0
+podziemy na pole walki
+bo to nie sa juz bajki
+
+# return 0
+oddaj hold ojczyznie
+numer nam da plomienie
+jakos wsystko minie
+bysmy nie ginieli w gminie
+
+# End if statement
+jesli koniec juz nad nami
+nie bedziemy wtedy sami
+bo koniec to nas wsystkich
+i ty i twoich bliskich
+
+# If numer == 1
+jesli mamy ilosc jelen
+numer jest 1
+szans duzo juz nie ma
+a wiecej by sie przyda
+
+# return 1
+oddaj my teraz zycie
+numer to nasze bycie
+do ostatniej sie bronia
+a do szwabow sie nie klonia
+
+# End if statement
+jesli koniec znow nad nami
+to tym razem jestesmy sami
+nie martwcie sie o swoj los
+bo sie skonczy w jeden cios
+
+# Create new variable called jeden, filled with an irrelevant number (cause it's going to change anyways)
+strzelaja jak do jelen
+a my inta jeden
+0 bedzie szans
+na zycia poza krans
+
+# Create new variable called drugi, filled with an irrelevant number (cause it's going to change anyways)
+czerwoni dadza nam dlugi
+ze taki inta drugi
+0 mamy innych drug
+opierac sie jak walic w slup
+
+# Change jeden
+zmien los by nie jak jelen
+bo to nie bedzie ty jeden
+-1 i numer tych
+ktorzy chca z ciebie dych
+
+# Change drugi
+zmien swiat ten srugi
+i zbuduj z gruz drugi
+-2 i numer ludzi
+ktorych ty nie obudzi
+
+# Create new variable called pierwsza, filled with an irrelevant number (cause it's going to change anyways)
+nie sluchaj tego wiersza
+bo to inta pierwsza
+0 jest w tym sensu
+by przejmowac sie balansu
+
+# Create new variable called druga, filled with an irrelevant number (cause it's going to change anyways)
+nie ma sensu numer sruga
+ze to jest inta druga
+0 znowu jest to rozumu
+pisze jakbym sie napil rumu
+
+# Run fiba with pierwsza as its' output variable and jeden as the input variable
+to jest fiba runa
+ojczysta nasza duma
+bo ona idzie pierwsza
+tak mowi ta wiersza
+
+# Select input variable
+nie wiem co to fiba
+ale brzmi troche jak ryba
+jeden pierdol mialem do dania
+zginal po spodni prania
+
+# All variables have been entered
+po tym nie ma nic
+nie bedzie czemu sie bic
+pokoj wrescie wroci tu
+az od smiechy nie ma tchu
+
+# Run fiba with druga as its' output variable and drugi as the input variable
+znow ta fiba runa
+i skads jest tu duma
+ze tak robi druga
+bez kary takiej sruga
+
+# Select input variable
+prawie sie konczy ta fiba
+gdyz sie tam juz figla
+drugi pierdolu nie dam
+chyba ze sie posram
+
+# All variables have been entered
+juz nie bedzie nic
+i bedzie za co pic
+bo wojna jest ku konca
+tak mowi czerwony gonca
+
+# Create new variable called totalna, filled with an irrelevant number (cause it's going to change anyways)
+co zostalo jest marna
+prze ta inta totalna
+0 zostalo po wojnie
+zgubilismy w walce zbrojnie
+
+# Change totalna to contain the total value of pierwsza and druga
+zmien occupanta na tyrana
+ta sama bida totalna
+pierwsza i druga
+obojetnie kto nam daje sruga
+
+# Return totalna
+oddaj hold ostatni raz
+totalna occupacja bez twarz
+wyglada ze nowa walka
+a AK ich spierze jak pralka
+
+# End function
+siekiera, motyka, nowy, goniec
+dupek z ducem to nie koniec
+siekiera, motyka, druga, wojna
+dalej toczy sie walka zbrojna
+
+
+# Create variable called liczba and variable called resultat
+siekiera, motyka, liczba, inta
+12 numerow nad glowa swinta
+siekiera, motyka, resultat, inta
+0 mamy teraz swinta
+
+# Run function fiba() with resultat as output variable and liczba as input
+siekiera, motyka, fiba, runa
+walki sa od gor po duna
+siekiera, motyka, resultat, sredni
+nie prezyja ci wybredni
+
+# Enter input variable
+siekiera, motyka, fiba, bojka
+liczba wyglada na trojka
+siekiera, motyka, nic, rzad
+pomoc czerwonym to byl blad
+
+# Print result from function
+siekiera, motyka, print, runa
+znow walczymy z gor po duna
+siekiera, motyka, nic, prawa
+ta occupacja to nie zabawa
+
+siekiera, motyka, print, baby
+resultat jest jakos slaby
+siekiera, motyka, nic, goniec
+to dla nas juz jest koniec

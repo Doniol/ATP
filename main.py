@@ -30,6 +30,11 @@ def main():
     AST = Parser(tokens).get_AST()
     test_nodes = AST.segments
     interpret(test_nodes, 0, [], [])
+    
+    tokens = lex("test_3.txt")
+    AST = Parser(tokens).get_AST()
+    test_nodes = AST.segments
+    interpret(test_nodes, 0, [], [])
 
 
 main()

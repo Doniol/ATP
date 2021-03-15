@@ -15,6 +15,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, VARS: List[Tuple[str,
     FUNCS: A list keeping track of all created functions that are currently available
     return: The VARS and FUNCS that are currently available
     '''
+    # print(VARS)
     if node_count == len(nodes):
         # If last node has been ran
         return VARS, FUNCS
@@ -31,7 +32,11 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, VARS: List[Tuple[str,
             # New vars need to be read, 'cause the ones used in the condition could change
             new_VARS, new_FUNCS = interpret(node.code, 0, VARS, FUNCS)
             # Keep repeating until ans is false
-            end_VARS, end_FUNCS = interpret([node], 0, new_VARS, new_FUNCS)
+            result = interpret([node], 0, new_VARS, new_FUNCS)
+            # Check whether the chosen piece of code ended because of a return-statement, if so, continue returning
+            if type(result) != tuple or any(list(map(lambda x: type(x[1]) == _nodes.Node, result[1]))):
+                return result
+            end_VARS, end_FUNCS = result
             # Go to the next node
             return interpret(nodes, node_count + 1, end_VARS, end_FUNCS)
         else:
@@ -50,7 +55,11 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, VARS: List[Tuple[str,
         # Check whether condition is True or False
         if ans:
             # Run the code within if-statement
-            new_VARS, new_FUNCS = interpret(node.code, 0, VARS, FUNCS)
+            result = interpret(node.code, 0, VARS, FUNCS)
+            # Check whether the chosen piece of code ended because of a return-statement, if so, continue returning
+            if type(result) != tuple or any(list(map(lambda x: type(x[1]) == _nodes.Node, result[1]))):
+                return result
+            new_VARS, new_FUNCS = result
             # Go to next node
             return interpret(nodes, node_count + 1, new_VARS, new_FUNCS)
         else:
@@ -66,7 +75,8 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, VARS: List[Tuple[str,
         return returns if len(returns) > 1 else returns[0]
 
     elif isinstance(node, _nodes.Print):
-        print(unfold_variables(VARS, node.param_names))
+        text = unfold_variables(VARS, node.param_names)
+        print(text if len(text) > 1 else text[0])
         return interpret(nodes, node_count + 1, VARS, FUNCS)
     
     elif isinstance(node, _nodes.ExeFunc) and node.name == "len":

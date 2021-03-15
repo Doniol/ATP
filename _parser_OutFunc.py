@@ -130,7 +130,7 @@ def get_function_execution_vars_out_func(self, token_count: int, name: str):
             return [self.tokens[next_line].word] + other_vars[0], other_vars[1]
         else:
             # Error
-            return None, None
+            raise Exception("Incorrect syntax for passing function parameters: " + str(self.tokens[token_count - 5: token_count + 5]))
     else:
         # If nothing interesting happens
         return self.get_function_execution_vars_out_func(token_count + 1, name)
