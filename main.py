@@ -9,13 +9,13 @@ def main():
             # - Run functions
             # - Print shit
             # - Select item from list by index, only useable with assigning new vars
+            # - Len of list
         # Inside function:
             # - Change existing var
             # - Run functions
             # - While-loops
             # - If-statements
             # - Return something
-            # - Len of list
         # Outside function:
             # - Create functions
 

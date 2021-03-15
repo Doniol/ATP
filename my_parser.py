@@ -41,8 +41,6 @@ class Parser():
         token_types: A list of possible token types that need to be skipped
         return: The index of the first token which is of one of the types contained within token_types, also returns the type of the found token
         '''
-        # if token_count >= len(self.tokens):
-        #     return token_count - 1, self.tokens[-1].type
         if self.tokens[token_count].type not in token_types:
             return token_count, self.tokens[token_count].type
         else:
