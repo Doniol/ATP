@@ -24,7 +24,6 @@ token_types = {
     "print": "PRINT", 
     "nic": "NOTHING", 
     "pustka": "EMPTY", 
-    "#": "COMMENT", 
     "rozno": "ANY", 
     "zmien": "CHANGE"
 }
@@ -135,7 +134,7 @@ def lex(file: str) -> Union[List[str], List[Token]]:
 def main():
     ''' Runs and prints the lexed data
     '''
-    print(lex("test_2.txt"))
+    print(lex("test_files/test_2.txt"))
 
 
 # main()

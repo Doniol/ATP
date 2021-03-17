@@ -10,9 +10,9 @@ pustka nad glowami swinta
 siekiera, motyka, nic, stracic
 nie chcielismy sie bic
 
-# If numer == 0
+# If numer < 2
 jesli juz bedzie sfero
-numer jest 0
+numer mniej niz 2
 podziemy na pole walki
 bo to nie sa juz bajki
 
@@ -27,24 +27,6 @@ jesli koniec juz nad nami
 nie bedziemy wtedy sami
 bo koniec to nas wsystkich
 i ty i twoich bliskich
-
-# If numer == 1
-jesli mamy ilosc jelen
-numer jest 1
-szans duzo juz nie ma
-a wiecej by sie przyda
-
-# return 1
-oddaj my teraz zycie
-numer to nasze bycie
-do ostatniej sie bronia
-a do szwabow sie nie klonia
-
-# End if statement
-jesli koniec znow nad nami
-to tym razem jestesmy sami
-nie martwcie sie o swoj los
-bo sie skonczy w jeden cios
 
 # Create new variable called jeden, filled with an irrelevant number (cause it's going to change anyways)
 strzelaja jak do jelen

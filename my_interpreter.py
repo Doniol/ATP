@@ -129,7 +129,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, VARS: List[Tuple[str,
 
 
 def main():
-    tokens = lex("test_2.txt")
+    tokens = lex("test_files/test_2.txt")
     AST = Parser(tokens).get_AST()
     interpret(AST.segments)
 

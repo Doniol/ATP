@@ -128,7 +128,7 @@ class Parser():
 
 
 def main():
-    words = re.split("(\n)| |, |#.*", open("test_2.txt", "r").read())
+    words = re.split("(\n)| |, |#.*", open("test_files/test_2.txt", "r").read())
     sys.setrecursionlimit(len(words) * 2)
     custom_lexer = lexer(token_types, True)
     tokens = custom_lexer(words)

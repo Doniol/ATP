@@ -1,7 +1,5 @@
-def fiba(numer: int) -> int:
-    if numer == 0:
-        return numer
-    if numer == 1:
+def fiba(numer: int=0) -> int:
+    if numer < 2:
         return numer
     
     jeden: int = 0
