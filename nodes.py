@@ -74,13 +74,14 @@ class Node():
 class WhileNode(Node):
     ''' A node for defining while-loops
     '''
-    def __init__(self, condition: List[str], code: List[Node]) -> None:
+    def __init__(self, id:int, condition: List[str], code: List[Node]) -> None:
         ''' Inits the class
 
         condition: A list containing the condition that needs to be true in order to contain looping
         code: A list of nodes that are to be executed if the condition is true
         '''
         Node.__init__(self)
+        self.id = id
         self.lhs, operator, self.rhs = condition
         self.condition = Condition(operator)
         self.code = code
