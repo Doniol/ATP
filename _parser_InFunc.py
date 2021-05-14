@@ -208,7 +208,7 @@ def get_code_segment_in_func(self, token_count, ending):
         statement = paragraph[1]
         code, new_count = self.get_code_segment_in_func(paragraph[-1], "IF_END")
         # Create if node
-        node = nodes.IfNode(statement, code)
+        node = nodes.IfNode(token_count, statement, code)
         other_segments = self.get_code_segment_in_func(new_count, ending)
         return [node] + other_segments[0], other_segments[1]
     else:

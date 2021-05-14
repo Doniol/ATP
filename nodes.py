@@ -4,7 +4,8 @@ from typing import List, Any, Tuple
 empty_types = {
     "INT": 0,
     "FLOAT": 0.0,
-    "STRING": ""
+    "STRING": "",
+    "ANY": ""
 }
 
 def get_entry_by_name(entries: List[Any], name: str, index: int, exception: bool=False) -> Tuple[Any]:
@@ -93,19 +94,20 @@ class WhileNode(Node):
         '''
         expr = self.lhs + " " + self.condition.__repr__() + " " + self.rhs
         code = "\n\t".join(list(map(lambda x: x.__repr__(), self.code)))
-        return "while " + expr + ":\n\t" + code + "\n\tEND_WHILE"
+        return str(self.id) + "-while " + expr + ":\n\t" + code + "\n\tEND_WHILE"
 
 
 class IfNode(Node):
     ''' A node for defining if-statements
     '''
-    def __init__(self, condition: List[str], code: List[Node]) -> None:
+    def __init__(self, id:int, condition: List[str], code: List[Node]) -> None:
         ''' Inits the class
 
         condition: A list containing the condition that needs to be true in order to run the given code
         code: A list of nodes that are to be executed if the condition is true
         '''
         Node.__init__(self)
+        self.id = id
         self.lhs, operator, self.rhs = condition
         self.condition = Condition(operator)
         self.code = code
@@ -117,7 +119,7 @@ class IfNode(Node):
         '''
         expr = self.lhs + " " + self.condition.__repr__() + " " + self.rhs
         code = "\n\t".join(list(map(lambda x: x.__repr__(), self.code)))
-        return "if " + expr + ":\n\t" + code + "\n\tEND_IF"
+        return str(self.id) + "-if " + expr + ":\n\t" + code + "\n\tEND_IF"
 
 
 class Condition():
@@ -192,7 +194,7 @@ class DefFunc(Node):
         '''
         full_str = self.return_type.__repr__() + " " + self.name + "("
         full_str += ", ".join(list(map(lambda x: x.__repr__(), self.params)))
-        full_str += "):"
+        full_str += "):\n\t"
         full_str += "\n\t".join(list(map(lambda x: x.__repr__(), self.code)))
         return full_str + "\nEND_FUNC"
 

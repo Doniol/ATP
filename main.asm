@@ -1,31 +1,42 @@
 .cpu cortex-m0
+.data
+
+word:
+    .asciz "word\n"
+
+second_word:
+    .asciz "seco\n"
+
+third_word:
+    .asciz "thir\n"
+
+number:
+    .int 3
+
+second_number:
+    .int 0
+
 .text
 .align 2
 .global main
 
-word:
-    .asciz "word"
-
-other_word:
-    .asciz "other_word"
-
 main:
-    PUSH {R4, LR}
-@ Print standard word
-    LDR R0, =word
+    PUSH {LR}
+    BL print_R2_end
+print_R2:
+    PUSH {R0-R2, LR}
+    LDR R0, =second_word
+    PUSH {R0, R2}
     BL print_asciz
-
-@ Change contents of word:
-@ Load address of word into register
-    LDR R0, =word
-@ Load new word into another register
-    LDR R6, =other_word
-    LDR R5, [R6]
-@ Store new word in registered address
-    STR R5, [R0]
-
-@ Print changed word
-    LDR R0, =word
+    POP {R0, R2}
+    STR R2, [R0]
+    LDR R0, =second_word
     BL print_asciz
-end:
-    POP {R4, PC}
+    POP {R0-R2, PC}
+print_R2_end:
+    LDR R0, =third_word
+    BL print_asciz
+    LDR R2, =word
+    LDR R2, [R2]
+    BL print_R2
+	POP {PC}
