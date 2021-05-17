@@ -22,21 +22,9 @@ second_number:
 
 main:
     PUSH {LR}
-    BL print_R2_end
-print_R2:
-    PUSH {R0-R2, LR}
-    LDR R0, =second_word
-    PUSH {R0, R2}
+    LDR R1, =word
+    MOV R0, "test"
+    LDR R0, [R1]
+    LDR R0, =word
     BL print_asciz
-    POP {R0, R2}
-    STR R2, [R0]
-    LDR R0, =second_word
-    BL print_asciz
-    POP {R0-R2, PC}
-print_R2_end:
-    LDR R0, =third_word
-    BL print_asciz
-    LDR R2, =word
-    LDR R2, [R2]
-    BL print_R2
 	POP {PC}

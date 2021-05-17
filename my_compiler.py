@@ -13,15 +13,15 @@ def get_data_asm(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
     node = nodes[node_count]
     if isinstance(node, _nodes.AssignVar):
         # ASM will be as follows:
-        # In the beginning of the file, create variable with empty value
+        # In the beginning of the file, create variable with given value
         additional_asm = node.name + ":\n\t"
 
         if node.var_type == "INT":
-            additional_asm += ".int 0\n\n"
+            additional_asm += ".int " + str(node.value) + "\n\n"
         elif node.var_type == "FLOAT":
-            additional_asm += ".float 0.0\n\n"
+            additional_asm += ".float " + str(node.value) + "\n\n"
         elif node.var_type == "STRING":
-            additional_asm += ".asciz \"\"\n\n"
+            additional_asm += ".asciz " + node.value + "\n\n"
         else:
             raise Exception("Unsupported variable type for ASM-compiler in:\n" + node.__repr__())
 
@@ -55,20 +55,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
     asm: The generated ASM code
     return: 
     '''
-    if node_count == 0:
-        # Create Assembly file
-        f = open("assembly.asm", "w")
-        f.write(".cpu cortex-m0\n")
-        data = get_data_asm(nodes)
-        if data:
-            f.write(".data\n\n" + data)
-        f.write(".text\n.align 2\n.global main\n\nmain:\n\tPUSH {LR}\n")
-        f.close()
-
     if node_count == len(nodes):
-        f = open("assembly.asm", "a")
-        f.write("\tPOP {PC}")
-        f.close()
         return asm
     
     node = nodes[node_count]
@@ -86,9 +73,16 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         label = "_" + str(node.id) + "_while"
         start = label + ":\n"
 
-        # Load variables for comparison
-        loader = load_label_asm(node.lhs, "R0", True)
-        loader += load_label_asm(node.rhs, "R1", True)
+        # Load variables into R0 and R1, check if it's a raw number
+        try:
+            loader = "\tMOV R0, #" + str(int(node.lhs)) + "\n"
+        except:
+            loader = load_label_asm(node.lhs, "R0", True)
+        
+        try:
+            loader += "\tMOV R0, #" + str(int(node.rhs)) + "\n"
+        except:
+            loader += load_label_asm(node.rhs, "R1", True)
         # Write correct comparison
         if node.condition.operator == "wiecej":
             condition = "\tCMP R0, R1\n\tBHI " + label + "_loop\n"
@@ -115,10 +109,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
 
         # Combine all created asm code and add it to the file
         additional_asm = start + loader + condition + branch_end + loop_tag + loop_insides + restart + end_tag
-        f = open("assembly.asm", "a")
-        f.write(additional_asm)
-        f.close()
-        
+
         return interpret(nodes, node_count + 1, asm + additional_asm)
 
     elif isinstance(node, _nodes.IfNode):
@@ -132,9 +123,17 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         # Create label
         label = "_" + str(node.id) + "_if"
 
-        # Load variables into R0 and R1
-        loader = load_label_asm(node.lhs, "R0", True)
-        loader += load_label_asm(node.rhs, "R1", True)
+        # Load variables into R0 and R1, check if it's a raw number
+        try:
+            loader = "\tMOV R0, #" + str(int(node.lhs)) + "\n"
+        except:
+            loader = load_label_asm(node.lhs, "R0", True)
+        
+        try:
+            loader += "\tMOV R0, #" + str(int(node.rhs)) + "\n"
+        except:
+            loader += load_label_asm(node.rhs, "R1", True)
+
         # Write correct comparison
         if node.condition.operator == "wiecej":
             condition = "\tCMP R0, R1\n\tBHI " + label + "_true\n"
@@ -159,10 +158,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
 
         # Combine all created asm code and add it to the file
         additional_asm = loader + condition + branch_false + true_tag + if_insides + false_tag
-        f = open("assembly.asm", "a")
-        f.write(additional_asm)
-        f.close()
-        
+
         return interpret(nodes, node_count + 1, asm + additional_asm)
 
     elif isinstance(node, _nodes.DefFunc):
@@ -182,8 +178,8 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         branch_to_end = "\tBL " + label + "_end\n"
         start = label + ":\n"
 
-        # Push all relevant registers, and R8, onto stack
-        push = "\tPUSH {R0-R6, LR}\n\tPUSH {R8}"
+        # Push LR and R8 onto stack
+        push = "\tPUSH {LR}\n\tPUSH {R8}\n"
 
         # Store all given variables, in the correct order, under selected variable names
         store_vars = ""
@@ -191,66 +187,110 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
             # Load address of given param into R8
             store_vars += "\tLDR R8, =" + node.params[param_int].name + "\n"
             # Store given variable under that params' address
-            store_vars += "\tSTR R" + param_int + ", [R8]\n"
+            store_vars += "\tSTR R" + str(param_int) + ", [R8]\n"
         
         # Restore R8
-        pop_R8 = "\tPOP {R8}"
+        pop_R8 = "\tPOP {R8}\n"
 
         # Do whatever the code needs to do
         func_insides = interpret(node.code, 0)
 
-        # Pop all relevant registers
-        pop = "\tPOP {R0-R6, PC}\n"
+        # Pop PC
+        pop = "\tPOP {PC}\n"
 
         # Create tag for end of function
         end_tag = label + "_end:\n"
 
         # Combine all created asm code and add it to the file
         additional_asm = branch_to_end + start + push + store_vars + pop_R8 + func_insides + pop + end_tag
-        f = open("assembly.asm", "a")
-        f.write(additional_asm)
-        f.close()
-        
+
         return interpret(nodes, node_count + 1, asm + additional_asm)
 
-    # elif isinstance(node, _nodes.Return):
-    #     # ASM will be as follows:
-    #     # Store selected tags in R0, R1, etc.
-    #     # POP PC to return from function
-    #     # Once out of function, save R0, R1, etc. to selected variables
+    elif isinstance(node, _nodes.Return):
+        # ASM will be as follows:
+        # Store selected tag in R0
+        # POP PC to return from function
+        additional_asm = load_label_asm(node.param_names[0], "R0", True)
+        additional_asm += "\tPOP {PC}\n"
 
-    # elif isinstance(node, _nodes.Print):
-    #     # ASM will be as follows:
-    #     # Store to-be-printed variable in R0
-    #     # Branch to print-function (BL)
-    
-    # elif isinstance(node, _nodes.ExeFunc) and node.name == "len":
-    #     # ASM will be as follows:
-    #     # !?!??!?!?!?!?!?!
+        return interpret(nodes, node_count + 1, asm + additional_asm)
 
-    # elif isinstance(node, _nodes.ExeFunc):
-    #     # ASM will be as follows:
-    #     # Store the correct values in R0, R1, etc.
-    #     # Branch to function (BL)
+    elif isinstance(node, _nodes.Print):
+        # ASM will be as follows:
+        # PUSH relevant registers
+        # Store to-be-printed variable in R0
+        # Branch to print-function (BL)
+        # POP relevant registers
+        additional_asm = "\tPUSH {R0-R6}\n"
+        additional_asm += load_label_asm(node.param_names[0], "R0", False)
+        additional_asm += "\tBL print_asciz\n"
+        additional_asm += "\tPOP {R0-R6}\n"
 
-    # elif isinstance(node, _nodes.AssignVar):
-    #     # ASM will be as follows:
-    #     # In the line where var is assigned, change the earlier created vars' value
+        return interpret(nodes, node_count + 1, asm + additional_asm)
 
-    # elif isinstance(node, _nodes.ChangeVar):
-    #     # ASM will be as follows:
-    #     # ?!?!?!?
+    elif isinstance(node, _nodes.ExeFunc):
+        # ASM will be as follows:
+        # Store the correct values in R0, R1, etc.
+        # Branch to function (BL)
+        additional_asm = ""
+        for param_int in range(0, len(node.param_names)):
+            additional_asm += load_label_asm(node.param_names[param_int], "R" + str(param_int), True)
+
+        additional_asm += "\tBL " + node.name + "\n"
+        if node.storing_var:
+            additional_asm += load_label_asm(node.storing_var, "R1", False)
+            additional_asm += "\tSTR R0, [R1]\n"
+
+        return interpret(nodes, node_count + 1, asm + additional_asm)        
+
+    elif isinstance(node, _nodes.ChangeVar):
+        #TODO: -getallen fixen
+        # STR, MUL or DIV? We don't do that here
+        # ASM will be as follows:
+        # ?!?!?!?
+        additional_asm = load_label_asm(node.name, "R0", False)
+        try:
+            additional_asm += "\tMOV R2, #" + str(int(node.value[0])) + "\n"
+        except:
+            additional_asm += load_label_asm(node.value[0], "R2", True)
+
+        try:
+            additional_asm += "\tMOV R3, #" + str(int(node.value[2])) + "\n"
+        except:
+            additional_asm += load_label_asm(node.value[2], "R3", True)
+
+        if node.value[1] == "i":
+            additional_asm += "\tADD R1, R2, R3\n"
+        elif node.value[1] == "bez":
+            additional_asm += "\tSUB R1, R2, R3\n"
+        
+        additional_asm += "\tSTR R1, [R0]\n"
+        return interpret(nodes, node_count + 1, asm + additional_asm) 
 
     else:
-        interpret(nodes, node_count + 1, asm)
+        return interpret(nodes, node_count + 1, asm)
 
 
 def main():
     # NO SUPPORT FOR LISTS, NOR ANY
-    # LIMIT OF 6 VARS TO GIVE TO FUNCTION
+    # MAX LENGTH OF WORDS IS 4
     tokens = lex("test_files/test_3.txt")
     AST = Parser(tokens).get_AST()
-    interpret(AST.segments)
+    print(AST.__repr__())
+
+    # Create Assembly file
+    f = open("assembly.asm", "w")
+    f.write(".cpu cortex-m0\n")
+    data = get_data_asm(AST.segments)
+    if data:
+        f.write(".data\n\n" + data)
+    f.write(".text\n.align 2\n.global main\n\nmain:\n\tPUSH {LR}\n")
+    f.close()
+    code = interpret(AST.segments)
+    f = open("assembly.asm", "a")
+    f.write(code)
+    f.write("\tPOP {PC}")
+    f.close()
 
 
 main()

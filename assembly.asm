@@ -20,7 +20,7 @@ totalna:
 	.int 0
 
 liczba:
-	.int 0
+	.int 12
 
 resultat:
 	.int 0
@@ -30,5 +30,66 @@ resultat:
 .global main
 
 main:
-	PUSH {R4, LR}
-	POP {R4, PC}
+	PUSH {LR}
+	BL _fiba_end
+_fiba:
+	PUSH {LR}
+	PUSH {R8}
+	LDR R8, =numer
+	STR R0, [R8]
+	POP {R8}
+	LDR R0, =numer
+	LDR R0, [R0]
+	MOV R0, #2
+	CMP R0, R1
+	BLO _45_if_true
+	BL _45_if_false
+_45_if_true:
+	LDR R0, =numer
+	LDR R0, [R0]
+	POP {PC}
+_45_if_false:
+	LDR R0, =jeden
+	MOV R2, #-1
+	LDR R3, =numer
+	LDR R3, [R3]
+	ADD R1, R2, R3
+	STR R1, [R0]
+	LDR R0, =drugi
+	MOV R2, #-2
+	LDR R3, =numer
+	LDR R3, [R3]
+	ADD R1, R2, R3
+	STR R1, [R0]
+	LDR R0, =jeden
+	LDR R0, [R0]
+	BL fiba
+	LDR R1, =pierwsza
+	STR R0, [R1]
+	LDR R0, =drugi
+	LDR R0, [R0]
+	BL fiba
+	LDR R1, =druga
+	STR R0, [R1]
+	LDR R0, =totalna
+	LDR R2, =pierwsza
+	LDR R2, [R2]
+	LDR R3, =druga
+	LDR R3, [R3]
+	ADD R1, R2, R3
+	STR R1, [R0]
+	LDR R0, =totalna
+	LDR R0, [R0]
+	POP {PC}
+	POP {PC}
+_fiba_end:
+	LDR R0, =liczba
+	LDR R0, [R0]
+	BL fiba
+	LDR R1, =resultat
+	STR R0, [R1]
+	PUSH {R0-R6}
+	LDR R0, =resultat
+	BL print_asciz
+	POP {R0-R6}
+	POP {PC}
