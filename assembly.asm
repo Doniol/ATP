@@ -1,95 +1,81 @@
-.cpu cortex-m0
+.cpu cortex-m3
 .data
 
-numer:
-	.int 0
+word:
+	.asciz "fuck\n"
 
-jeden:
-	.int 0
+start:
+	.asciz "start\n"
 
-drugi:
-	.int 0
+calculations:
+	.asciz "calculations\n"
 
-pierwsza:
-	.int 0
+true:
+	.asciz "true\n"
 
-druga:
-	.int 0
+mid_point:
+	.asciz "mid_point\n"
 
-totalna:
-	.int 0
-
-liczba:
-	.int 12
-
-resultat:
-	.int 0
+result:
+	.asciz "result\n"
 
 .text
 .align 2
 .global main
 
 main:
+	BL wait
 	PUSH {LR}
-	BL _fiba_end
-_fiba:
+	BL test_end
+test_prologue:
 	PUSH {LR}
-	PUSH {R8}
-	LDR R8, =numer
-	STR R0, [R8]
-	POP {R8}
-	LDR R0, =numer
-	LDR R0, [R0]
-	MOV R0, #2
+	@ Reserve storage in stack
+	SUB SP, SP, #64
+	@ Store relevant data in stack
+	STR R0, [SP, #12]
+
+	@ If numer < 2
+	LDR R0, [SP, #12]
+	MOV R1, #2
 	CMP R0, R1
-	BLO _45_if_true
-	BL _45_if_false
-_45_if_true:
-	LDR R0, =numer
-	LDR R0, [R0]
+	BLO if_true
+	B if_false
+if_true:
+	@ Return numer; R0
+	LDR R0, [SP, #12]
+	ADD SP, SP, #64
+	POP {PC} 
+if_false:
+	@ jeden = numer - 1
+	LDR R0, [SP, #12]
+	SUB R0, R0, #1
+	STR R0, [SP, #16]
+	@ drugi = numer - 2
+	LDR R0, [SP, #12]
+	SUB R0, R0, #2
+	STR R0, [SP, #20]
+
+	@ Load jeden into R0, run function, and store result
+	LDR R0, [SP, #16]
+	BL test_prologue
+	STR R0, [SP, #24]
+	@ Load drugi into R0, run function, and store result
+	LDR R0, [SP, #20]
+	BL test_prologue
+	STR R0, [SP, #28]
+
+	@ Combine the results to 1 new number and return it
+	LDR R1, [SP, #24]
+	LDR R2, [SP, #28]
+	ADD R0, R1, R2
+	STR R0, [SP, #32]
+	LDR R0, [SP, #32]
+	ADD SP, SP, #64
 	POP {PC}
-_45_if_false:
-	LDR R0, =jeden
-	MOV R2, #-1
-	LDR R3, =numer
-	LDR R3, [R3]
-	ADD R1, R2, R3
-	STR R1, [R0]
-	LDR R0, =drugi
-	MOV R2, #-2
-	LDR R3, =numer
-	LDR R3, [R3]
-	ADD R1, R2, R3
-	STR R1, [R0]
-	LDR R0, =jeden
-	LDR R0, [R0]
-	BL fiba
-	LDR R1, =pierwsza
-	STR R0, [R1]
-	LDR R0, =drugi
-	LDR R0, [R0]
-	BL fiba
-	LDR R1, =druga
-	STR R0, [R1]
-	LDR R0, =totalna
-	LDR R2, =pierwsza
-	LDR R2, [R2]
-	LDR R3, =druga
-	LDR R3, [R3]
-	ADD R1, R2, R3
-	STR R1, [R0]
-	LDR R0, =totalna
-	LDR R0, [R0]
-	POP {PC}
-	POP {PC}
-_fiba_end:
-	LDR R0, =liczba
-	LDR R0, [R0]
-	BL fiba
-	LDR R1, =resultat
-	STR R0, [R1]
-	PUSH {R0-R6}
-	LDR R0, =resultat
+test_end:
+	MOV R0, #12
+	BL test_prologue
+	BL print_int
+	LDR R0, =word
 	BL print_asciz
-	POP {R0-R6}
 	POP {PC}

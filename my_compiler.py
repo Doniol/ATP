@@ -69,6 +69,9 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         # Goto loop name
         # Tag for loop end
 
+        # Note what happens
+        designation = "@While-loop\n"
+
         # Create label
         label = "_" + str(node.id) + "_while"
         start = label + ":\n"
@@ -108,7 +111,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         end_tag = label + "_end:\n"
 
         # Combine all created asm code and add it to the file
-        additional_asm = start + loader + condition + branch_end + loop_tag + loop_insides + restart + end_tag
+        additional_asm = designation + start + loader + condition + branch_end + loop_tag + loop_insides + restart + end_tag
 
         return interpret(nodes, node_count + 1, asm + additional_asm)
 
@@ -118,7 +121,10 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         # Goto false tag
         # True tag
         # Whatever if does
-        # Tag for false if
+        # Tag for end if
+
+        # Note what happens
+        designation = "@If-statement\n"
         
         # Create label
         label = "_" + str(node.id) + "_if"
@@ -130,7 +136,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
             loader = load_label_asm(node.lhs, "R0", True)
         
         try:
-            loader += "\tMOV R0, #" + str(int(node.rhs)) + "\n"
+            loader += "\tMOV R1, #" + str(int(node.rhs)) + "\n"
         except:
             loader += load_label_asm(node.rhs, "R1", True)
 
@@ -146,18 +152,18 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         else:
             raise Exception("Incompatible operator for if-statement used")
         
-        # Branch to false-tag
-        branch_false = "\tBL " + label + "_false\n"
+        # Branch to end-tag
+        branch_end = "\tBL " + label + "_end\n"
 
         # Create tag for true
         true_tag = label + "_true:\n"
         # Do whatever needs to be done within if
         if_insides = interpret(node.code)
-        # Create false-tag
-        false_tag = label + "_false:\n"
+        # Create end-tag
+        end_tag = label + "_end:\n"
 
         # Combine all created asm code and add it to the file
-        additional_asm = loader + condition + branch_false + true_tag + if_insides + false_tag
+        additional_asm = designation + loader + condition + branch_end + true_tag + if_insides + end_tag
 
         return interpret(nodes, node_count + 1, asm + additional_asm)
 
@@ -172,25 +178,28 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         # POP R0-R6 and PC
         # Function end-tag
 
+        # Note what happens
+        designation = "@Define function\n"
+
         # Create label
         label = "_" + node.name
         # Write branch to end of func (so it doesn't execute immediately)
         branch_to_end = "\tBL " + label + "_end\n"
         start = label + ":\n"
 
-        # Push LR and R8 onto stack
-        push = "\tPUSH {LR}\n\tPUSH {R8}\n"
+        # Push LR and R6 onto stack
+        push = "\tPUSH {LR}\n\tPUSH {R6}\n"
 
         # Store all given variables, in the correct order, under selected variable names
         store_vars = ""
         for param_int in range(0, len(node.params)):
-            # Load address of given param into R8
-            store_vars += "\tLDR R8, =" + node.params[param_int].name + "\n"
+            # Load address of given param into R6
+            store_vars += "\tLDR R6, =" + node.params[param_int].name + "\n"
             # Store given variable under that params' address
-            store_vars += "\tSTR R" + str(param_int) + ", [R8]\n"
+            store_vars += "\tSTR R" + str(param_int) + ", [R6]\n"
         
-        # Restore R8
-        pop_R8 = "\tPOP {R8}\n"
+        # Restore R6
+        pop_R6 = "\tPOP {R6}\n"
 
         # Do whatever the code needs to do
         func_insides = interpret(node.code, 0)
@@ -202,7 +211,7 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         end_tag = label + "_end:\n"
 
         # Combine all created asm code and add it to the file
-        additional_asm = branch_to_end + start + push + store_vars + pop_R8 + func_insides + pop + end_tag
+        additional_asm = designation + branch_to_end + start + push + store_vars + pop_R6 + func_insides + pop + end_tag
 
         return interpret(nodes, node_count + 1, asm + additional_asm)
 
@@ -210,10 +219,14 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         # ASM will be as follows:
         # Store selected tag in R0
         # POP PC to return from function
+
+        # Note what happens
+        designation = "@Return\n"
+
         additional_asm = load_label_asm(node.param_names[0], "R0", True)
         additional_asm += "\tPOP {PC}\n"
 
-        return interpret(nodes, node_count + 1, asm + additional_asm)
+        return interpret(nodes, node_count + 1, asm + designation + additional_asm)
 
     elif isinstance(node, _nodes.Print):
         # ASM will be as follows:
@@ -221,51 +234,90 @@ def interpret(nodes: List[_nodes.Node], node_count: int=0, asm: str=""):
         # Store to-be-printed variable in R0
         # Branch to print-function (BL)
         # POP relevant registers
+
+        # Note what happens
+        designation = "@Print\n"
+
         additional_asm = "\tPUSH {R0-R6}\n"
         additional_asm += load_label_asm(node.param_names[0], "R0", False)
         additional_asm += "\tBL print_asciz\n"
+        additional_asm += load_label_asm(node.param_names[0], "R0", False)
+        additional_asm += "\tBL print_int\n"
         additional_asm += "\tPOP {R0-R6}\n"
 
-        return interpret(nodes, node_count + 1, asm + additional_asm)
+
+        return interpret(nodes, node_count + 1, asm + designation + additional_asm)
 
     elif isinstance(node, _nodes.ExeFunc):
         # ASM will be as follows:
         # Store the correct values in R0, R1, etc.
         # Branch to function (BL)
+
+        # Note what happens
+        designation = "@Execute Function\n"
+
         additional_asm = ""
         for param_int in range(0, len(node.param_names)):
             additional_asm += load_label_asm(node.param_names[param_int], "R" + str(param_int), True)
 
-        additional_asm += "\tBL " + node.name + "\n"
+        additional_asm += "\tBL _" + node.name + "\n"
         if node.storing_var:
             additional_asm += load_label_asm(node.storing_var, "R1", False)
             additional_asm += "\tSTR R0, [R1]\n"
 
-        return interpret(nodes, node_count + 1, asm + additional_asm)        
+        return interpret(nodes, node_count + 1, asm + designation + additional_asm)        
 
     elif isinstance(node, _nodes.ChangeVar):
-        #TODO: -getallen fixen
-        # STR, MUL or DIV? We don't do that here
+        # STRING, MUL or DIV? We don't do that here
         # ASM will be as follows:
         # ?!?!?!?
+
+        # Note what happens
+        designation = "@Change Variable\n"
+
         additional_asm = load_label_asm(node.name, "R0", False)
+        invert_command = False
+
         try:
-            additional_asm += "\tMOV R2, #" + str(int(node.value[0])) + "\n"
+            value = int(node.value[0])
+            if value >= 0:
+                # If positive number; nothing special happens
+                additional_asm += "\tMOV R2, #" + str(value) + "\n"
+            else:
+                # Else, invert the selected operation
+                additional_asm += "\tMOV R3, #" + str(value * -1) + "\n"
+                invert_command = True
         except:
             additional_asm += load_label_asm(node.value[0], "R2", True)
 
         try:
-            additional_asm += "\tMOV R3, #" + str(int(node.value[2])) + "\n"
+            value = int(node.value[2])
+            if value >= 0:
+                if invert_command:
+                    # If first number is negative, switch their places when subtracting
+                    additional_asm += "\tMOV R2, #" + str(value) + "\n"
+                else:
+                    additional_asm += "\tMOV R3, #" + str(value) + "\n"
+            else:
+                # Else, invert the selected operation
+                if invert_command:
+                    raise Exception("Can\'t Subtract/Add 2 negative numbers")
+                else:
+                    additional_asm += "\tMOV R3, #" + str(value * -1) + "\n"
+                    invert_command = True
         except:
-            additional_asm += load_label_asm(node.value[2], "R3", True)
+            if invert_command:
+                additional_asm += load_label_asm(node.value[2], "R2", True)
+            else:
+                additional_asm += load_label_asm(node.value[2], "R3", True)
 
-        if node.value[1] == "i":
+        if node.value[1] == "i" and not invert_command or node.value[1] == "bez" and invert_command:
             additional_asm += "\tADD R1, R2, R3\n"
-        elif node.value[1] == "bez":
+        elif node.value[1] == "bez" and not invert_command or node.value[1] == "i" and invert_command:
             additional_asm += "\tSUB R1, R2, R3\n"
         
         additional_asm += "\tSTR R1, [R0]\n"
-        return interpret(nodes, node_count + 1, asm + additional_asm) 
+        return interpret(nodes, node_count + 1, asm + designation + additional_asm) 
 
     else:
         return interpret(nodes, node_count + 1, asm)
@@ -276,7 +328,7 @@ def main():
     # MAX LENGTH OF WORDS IS 4
     tokens = lex("test_files/test_3.txt")
     AST = Parser(tokens).get_AST()
-    print(AST.__repr__())
+    # print(AST.__repr__())
 
     # Create Assembly file
     f = open("assembly.asm", "w")

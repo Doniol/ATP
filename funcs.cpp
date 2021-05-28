@@ -1,10 +1,17 @@
 #include "hwlib.hpp"
 
-extern "C" void print_asciz(const char * c){
-   hwlib::wait_ms( 1'000 );
-   hwlib::cout 
-      << c << hwlib::flush;
+extern "C" void wait(){
+   hwlib::wait_ms(1'000);
 }
+
+extern "C" void print_asciz(const char * c){
+   hwlib::cout << c << hwlib::flush;
+}
+
+extern "C" void print_int(int i){
+   hwlib::cout << i << "\n" << hwlib::flush;
+}
+
 // // Using the print
 // .cpu cortex-m0
 // .data
