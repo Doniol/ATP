@@ -14,27 +14,36 @@ def get_data_asm(nodes: List[_nodes.Node], file, curr_name: str="", counts: Dict
     
     node = nodes[node_count]
     if isinstance(node, _nodes.DefFunc):
-        in_function_counts = get_data_asm(node.code, file, node.name)
-        function_param_counts = get_data_asm(node.params, file, node.name)
+        in_function_counts = get_data_asm(node.code, file, node.name, counts)
         # Combine old and additional counts
-        new_counts = {k: function_param_counts.get(k, []) + counts.get(k, []) + in_function_counts.get(k, [])
-                      for k in set(counts).union(in_function_counts).union(function_param_counts)}
-        return get_data_asm(nodes, file, curr_name, new_counts, node_count + 1)
+        new_counts = {key: {**counts.get(key, {}), **in_function_counts.get(key, {})}
+                for key in set(counts).union(in_function_counts)}
+
+        function_param_counts = get_data_asm(node.params, file, node.name, new_counts)
+        # Combine old and additional counts
+        newer_counts = {key: {**new_counts.get(key, {}), **function_param_counts.get(key, {})}
+                    for key in set(new_counts).union(function_param_counts)}
+
+        return get_data_asm(nodes, file, curr_name, newer_counts, node_count + 1)
 
     elif isinstance(node, _nodes.AssignVar):
         if node.var_type == "STRING":
             file.write(node.name + ":\n\t.asciz \"" + node.value + "\\n\"\n\n")
-        additional_counts = {curr_name: [node.name]}
+
+        additional_counts = {curr_name: {node.name: [len(counts.get(curr_name, [])) * 4, node.var_type]}}
         # Combine old and additional counts
-        new_counts = {k: counts.get(k, []) + additional_counts.get(k, [])
-                      for k in set(counts).union(additional_counts)}
+        new_counts = {key: {**counts.get(key, {}), **additional_counts.get(key, {})}
+                    for key in set(counts).union(additional_counts)}
+
         return get_data_asm(nodes, file, curr_name, new_counts, node_count + 1)
 
     elif isinstance(node, _nodes.WhileNode) or isinstance(node, _nodes.IfNode):
-        additional_counts = get_data_asm(node.code, file, curr_name)
+        additional_counts = get_data_asm(node.code, file, curr_name, counts)
+
         # Combine old and additional counts
-        new_counts = {k: counts.get(k, []) + additional_counts.get(k, [])
-                      for k in set(counts).union(additional_counts)}
+        new_counts = {key: {**counts.get(key, {}), **additional_counts.get(key, {})}
+                    for key in set(counts).union(additional_counts)}
+        
         return get_data_asm(nodes, file, curr_name, new_counts, node_count + 1)
 
     else:
@@ -43,9 +52,9 @@ def get_data_asm(nodes: List[_nodes.Node], file, curr_name: str="", counts: Dict
 
 def access_local_stack(func_name, var_name, all_vars, register, load):
     if load:
-        return "\tLDR " + register + ", [SP, #" + str(all_vars[func_name].index(var_name) * 4) + "]\n"
+        return "\tLDR " + register + ", [SP, #" + str(all_vars[func_name][var_name][0]) + "]\n"
     else:
-        return "\tSTR " + register + ", [SP, #" + str(all_vars[func_name].index(var_name) * 4) + "]\n"
+        return "\tSTR " + register + ", [SP, #" + str(all_vars[func_name][var_name][0]) + "]\n"
 
 
 def interpret(nodes: List[_nodes.Node], curr_func: str, all_vars: Dict[str, List[str]], node_count: int=0, asm: str=""):
@@ -271,13 +280,14 @@ def interpret(nodes: List[_nodes.Node], curr_func: str, all_vars: Dict[str, List
         return interpret(nodes, curr_func, all_vars, node_count + 1, asm + comment + additional_asm)        
 
     elif isinstance(node, _nodes.ChangeVar):
-        #TODO: Throw error when not number; create function to check selected variable type
         # STRING, FLOAT, MUL or DIV? We don't do those here
         # ASM will be as follows:
         # ?!?!?!?
 
         if node.value[1] != "bez" and node.value[1] != "i":
             raise Exception("Unsupported operand for changing variables")
+        if all_vars[curr_func][node.name][1] != "INT":
+            raise Exception("Attempted calculation with non-INT value")
 
         # Note what happens
         comment = "@Change Variable\n"
@@ -371,7 +381,6 @@ def main():
 
     # Get ASM
     all_vars = get_data_asm(AST_segments, f, "main")
-    print(all_vars)
     asm = interpret(AST_segments, "main", all_vars)
 
     # Add all code
