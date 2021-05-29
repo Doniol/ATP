@@ -1,24 +1,4 @@
 .cpu cortex-m3
-.data
-
-word:
-	.asciz "fuck\n"
-
-start:
-	.asciz "start\n"
-
-calculations:
-	.asciz "calculations\n"
-
-true:
-	.asciz "true\n"
-
-mid_point:
-	.asciz "mid_point\n"
-
-result:
-	.asciz "result\n"
-
 .text
 .align 2
 .global main
@@ -26,54 +6,77 @@ result:
 main:
 	BL wait
 	PUSH {LR}
-	BL test_end
-test_prologue:
+	SUB SP, SP, #8
+@Define function
+	B _fiba_end
+_fiba:
 	PUSH {LR}
-	@ Reserve storage in stack
 	SUB SP, SP, #24
-	@ Store relevant data in stack
-	STR R0, [SP]
-
-	@ If numer < 2
-	LDR R0, [SP]
+	STR R0, [SP, #0]
+@If-statement
+	LDR R0, [SP, #0]
 	MOV R1, #2
 	CMP R0, R1
-	BLO if_true
-	B if_false
-if_true:
-	@ Return numer; R0
-	LDR R0, [SP]
+	BLO _45_if_true
+	B _45_if_end
+_45_if_true:
+@Return
+	LDR R0, [SP, #0]
 	ADD SP, SP, #24
-	POP {PC} 
-if_false:
-	@ jeden = numer - 1
-	LDR R0, [SP]
-	SUB R0, R0, #1
+	POP {PC}
+_45_if_end:
+MOV R0, #0
 	STR R0, [SP, #4]
-	@ drugi = numer - 2
-	LDR R0, [SP]
-	SUB R0, R0, #2
+MOV R0, #0
 	STR R0, [SP, #8]
-
-	@ Load jeden into R0, run function, and store result
-	LDR R0, [SP, #4]
-	BL test_prologue
+@Change Variable
+	MOV R3, #1
+	LDR R2, [SP, #0]
+	SUB R1, R2, R3
+	STR R1, [SP, #4]
+@Change Variable
+	MOV R3, #2
+	LDR R2, [SP, #0]
+	SUB R1, R2, R3
+	STR R1, [SP, #8]
+MOV R0, #0
 	STR R0, [SP, #12]
-	@ Load drugi into R0, run function, and store result
-	LDR R0, [SP, #8]
-	BL test_prologue
+MOV R0, #0
 	STR R0, [SP, #16]
-
-	@ Combine the results to 1 new number and return it
-	LDR R1, [SP, #12]
-	LDR R2, [SP, #16]
-	ADD R0, R1, R2
+@Execute Function
+	LDR R0, [SP, #4]
+	BL _fiba
+	STR R0, [SP, #12]
+@Execute Function
+	LDR R0, [SP, #8]
+	BL _fiba
+	STR R0, [SP, #16]
+MOV R0, #0
 	STR R0, [SP, #20]
+@Change Variable
+	LDR R2, [SP, #12]
+	LDR R3, [SP, #16]
+	ADD R1, R2, R3
+	STR R1, [SP, #20]
+@Return
 	LDR R0, [SP, #20]
 	ADD SP, SP, #24
 	POP {PC}
-test_end:
-	MOV R0, #12
-	BL test_prologue
+	ADD SP, SP, #24
+	POP {PC}
+_fiba_end:
+MOV R0, #12
+	STR R0, [SP, #0]
+MOV R0, #0
+	STR R0, [SP, #4]
+@Execute Function
+	LDR R0, [SP, #0]
+	BL _fiba
+	STR R0, [SP, #4]
+@Print
+	LDR R0, [SP, #4]
+	BL print_asciz
+	LDR R0, [SP, #4]
 	BL print_int
+	SUB SP, SP, #8
 	POP {PC}

@@ -5,7 +5,7 @@ extern "C" void wait(){
 }
 
 extern "C" void print_asciz(const char * c){
-   hwlib::cout << c << hwlib::flush;
+   hwlib::cout << c << "\n" << hwlib::flush;
 }
 
 extern "C" void print_int(int i){
