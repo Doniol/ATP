@@ -26,7 +26,7 @@ def main():
     # test_nodes = AST.segments
     # interpret(test_nodes, 0, [], [])
 
-    tokens = lex("test_files/test_2.txt")
+    tokens = lex("test_files/test_4.txt")
     AST = Parser(tokens).get_AST()
     test_nodes = AST.segments
     interpret(test_nodes, 0, [], [])

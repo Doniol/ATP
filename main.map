@@ -35,8 +35,6 @@ Discarded input sections
                 0x0000000000000000        0x4 funcs.o
  .text._ZN5hwlib9uart_getcEv
                 0x0000000000000000        0x4 funcs.o
- .text.print_asciz
-                0x0000000000000000       0x24 funcs.o
  .rodata._ZZN3due11ad_pin_infoENS_7ad_pinsEE17ad_pin_info_array
                 0x0000000000000000        0xc funcs.o
  .rodata._ZZN3due11ad_seq_infoEmE12ad_seq_array
@@ -1157,7 +1155,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp
                 [!provide]                        PROVIDE (__ram_size = __ram_size)
                 [!provide]                        PROVIDE (__ram_end = __ram_end)
 
-.text           0x0000000000000000      0x770
+.text           0x0000000000000000      0x778
                 0x0000000000000000                . = ALIGN (0x4)
                 0x0000000000000000                __text_start = .
                 [!provide]                        PROVIDE (__text_start = __text_start)
@@ -1192,96 +1190,99 @@ LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp
                 0x0000000000000254                hwlib::uart_putc(char)
  .text.wait     0x0000000000000258        0x8 funcs.o
                 0x0000000000000258                wait
- .text.print_int
+ .text.print_asciz
                 0x0000000000000260       0x24 funcs.o
-                0x0000000000000260                print_int
+                0x0000000000000260                print_asciz
+ .text.print_int
+                0x0000000000000284       0x24 funcs.o
+                0x0000000000000284                print_int
  .text._ZN5hwlib20cout_using_uart_putc5flushEv
-                0x0000000000000284        0x2 hwlib.o
-                0x0000000000000284                hwlib::cout_using_uart_putc::flush()
- *fill*         0x0000000000000286        0x2 
+                0x00000000000002a8        0x2 hwlib.o
+                0x00000000000002a8                hwlib::cout_using_uart_putc::flush()
+ *fill*         0x00000000000002aa        0x2 
  .text._ZN5hwlib15background_base18do_background_workEv
-                0x0000000000000288       0x3c hwlib.o
-                0x0000000000000288                hwlib::background_base::do_background_work()
+                0x00000000000002ac       0x3c hwlib.o
+                0x00000000000002ac                hwlib::background_base::do_background_work()
  .text._ZN3due9uart_initEv
-                0x00000000000002c4       0x60 hwlib.o
-                0x00000000000002c4                due::uart_init()
+                0x00000000000002e8       0x60 hwlib.o
+                0x00000000000002e8                due::uart_init()
  .text._ZN3due9uart_putcEc
-                0x0000000000000324       0x20 hwlib.o
-                0x0000000000000324                due::uart_putc(char)
+                0x0000000000000348       0x20 hwlib.o
+                0x0000000000000348                due::uart_putc(char)
  .text._ZN5hwlib20cout_using_uart_putc4putcEc
-                0x0000000000000344        0xa hwlib.o
-                0x0000000000000344                hwlib::cout_using_uart_putc::putc(char)
+                0x0000000000000368        0xa hwlib.o
+                0x0000000000000368                hwlib::cout_using_uart_putc::putc(char)
  .text._ZN5hwlib6now_usEv
-                0x000000000000034e       0x1c hwlib.o
-                0x000000000000034e                hwlib::now_us()
+                0x0000000000000372       0x1c hwlib.o
+                0x0000000000000372                hwlib::now_us()
  .text._ZN5hwlib7wait_usEi
-                0x000000000000036a       0x22 hwlib.o
-                0x000000000000036a                hwlib::wait_us(int)
+                0x000000000000038e       0x22 hwlib.o
+                0x000000000000038e                hwlib::wait_us(int)
  .text._ZN5hwlib7wait_msEi
-                0x000000000000038c       0x16 hwlib.o
-                0x000000000000038c                hwlib::wait_ms(int)
- *fill*         0x00000000000003a2        0x2 
- .text          0x00000000000003a4       0x80 main.o
-                0x00000000000003a4                main
+                0x00000000000003b0       0x16 hwlib.o
+                0x00000000000003b0                hwlib::wait_ms(int)
+ *fill*         0x00000000000003c6        0x2 
+ .text          0x00000000000003c8       0x64 main.o
+                0x00000000000003d0                main
  .text.__startup
-                0x0000000000000424       0x40 bmptk_cortex.o
-                0x0000000000000424                __startup
- .text          0x0000000000000464       0x30 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_aeabi_uldivmod.o)
-                0x0000000000000464                __aeabi_uldivmod
- .text          0x0000000000000494      0x2c4 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_udivmoddi4.o)
-                0x0000000000000494                __udivmoddi4
- .text          0x0000000000000758        0x4 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_dvmd_tls.o)
-                0x0000000000000758                __aeabi_ldiv0
-                0x000000000000075c                . = ALIGN (0x4)
+                0x000000000000042c       0x40 bmptk_cortex.o
+                0x000000000000042c                __startup
+ .text          0x000000000000046c       0x30 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_aeabi_uldivmod.o)
+                0x000000000000046c                __aeabi_uldivmod
+ .text          0x000000000000049c      0x2c4 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_udivmoddi4.o)
+                0x000000000000049c                __udivmoddi4
+ .text          0x0000000000000760        0x4 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_dvmd_tls.o)
+                0x0000000000000760                __aeabi_ldiv0
+                0x0000000000000764                . = ALIGN (0x4)
  *(.glue_7t .glue_7)
- .glue_7        0x000000000000075c        0x0 linker stubs
- .glue_7t       0x000000000000075c        0x0 linker stubs
-                0x000000000000075c                . = ALIGN (0x4)
+ .glue_7        0x0000000000000764        0x0 linker stubs
+ .glue_7t       0x0000000000000764        0x0 linker stubs
+                0x0000000000000764                . = ALIGN (0x4)
  *(.rodata .rodata.* .gnu.linkonce.r.*)
  .rodata.print_asciz.str1.1
-                0x000000000000075c        0x2 funcs.o
- *fill*         0x000000000000075e        0x2 
+                0x0000000000000764        0x2 funcs.o
+ *fill*         0x0000000000000766        0x2 
  .rodata._ZTVN5hwlib20cout_using_uart_putcE
-                0x0000000000000760       0x10 hwlib.o
-                0x0000000000000760                vtable for hwlib::cout_using_uart_putc
-                0x0000000000000770                . = ALIGN (0x4)
+                0x0000000000000768       0x10 hwlib.o
+                0x0000000000000768                vtable for hwlib::cout_using_uart_putc
+                0x0000000000000778                . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0000000000000770                . = ALIGN (0x4)
+                0x0000000000000778                . = ALIGN (0x4)
  *(.gcc_except_table)
-                0x0000000000000770                . = ALIGN (0x4)
+                0x0000000000000778                . = ALIGN (0x4)
  *(.eh_frame_hdr)
-                0x0000000000000770                . = ALIGN (0x4)
+                0x0000000000000778                . = ALIGN (0x4)
  *(.eh_frame)
-                0x0000000000000770                . = ALIGN (0x4)
-                0x0000000000000770                __text_end = .
+                0x0000000000000778                . = ALIGN (0x4)
+                0x0000000000000778                __text_end = .
                 [!provide]                        PROVIDE (__text_end = __text_end)
 
-.vfp11_veneer   0x0000000000000770        0x0
- .vfp11_veneer  0x0000000000000770        0x0 linker stubs
+.vfp11_veneer   0x0000000000000778        0x0
+ .vfp11_veneer  0x0000000000000778        0x0 linker stubs
 
-.v4_bx          0x0000000000000770        0x0
- .v4_bx         0x0000000000000770        0x0 linker stubs
+.v4_bx          0x0000000000000778        0x0
+ .v4_bx         0x0000000000000778        0x0 linker stubs
 
-.iplt           0x0000000000000770        0x0
- .iplt          0x0000000000000770        0x0 funcs.o
+.iplt           0x0000000000000778        0x0
+ .iplt          0x0000000000000778        0x0 funcs.o
 
 .IF_YOU_SEE_THIS_YOU_HAVE_ONE_OR_MORE_GLOBAL_OBJECT_CONSTRUCTORS
  *(.init)
  *(.preinit_array)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array)
-                0x0000000000000770                . = ALIGN (0x4)
-                0x0000000000000770                __exidx_start = .
+                0x0000000000000778                . = ALIGN (0x4)
+                0x0000000000000778                __exidx_start = .
                 [!provide]                        PROVIDE (__exidx_start = __exidx_start)
 
-.ARM.exidx      0x0000000000000770        0x8
+.ARM.exidx      0x0000000000000778        0x8
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
- .ARM.exidx     0x0000000000000770        0x8 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_udivmoddi4.o)
+ .ARM.exidx     0x0000000000000778        0x8 /usr/lib/gcc/arm-none-eabi/9.2.1/thumb/v7-m/nofp/libgcc.a(_udivmoddi4.o)
 
-.rel.dyn        0x0000000000000778        0x0
- .rel.iplt      0x0000000000000778        0x0 funcs.o
-                0x0000000000000778                . = ALIGN (0x4)
-                0x0000000000000778                __exidx_end = .
+.rel.dyn        0x0000000000000780        0x0
+ .rel.iplt      0x0000000000000780        0x0 funcs.o
+                0x0000000000000780                . = ALIGN (0x4)
+                0x0000000000000780                __exidx_end = .
                 [!provide]                        PROVIDE (__exidx_end = __exidx_end)
 
 .bss            0x0000000020070000    0x1201c
@@ -1328,9 +1329,9 @@ LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp
                 0x000000002008201c                __bss_end = .
                 [!provide]                        PROVIDE (__bss_end = __bss_end)
 
-.data           0x000000002008201c       0x1c load address 0x0000000000000778
+.data           0x000000002008201c       0x1c load address 0x0000000000000780
                 0x000000002008201c                . = ALIGN (0x4)
-                0x0000000000000778                __data_init_start = LOADADDR (.data)
+                0x0000000000000780                __data_init_start = LOADADDR (.data)
                 [!provide]                        PROVIDE (__data_init_start = __data_init_start)
                 0x000000002008201c                __data_start = .
                 [!provide]                        PROVIDE (__data_start = __data_start)
@@ -1348,13 +1349,13 @@ LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp
                 0x0000000020082038                . = ALIGN (0x4)
                 0x0000000020082038                __data_end = .
                 [!provide]                        PROVIDE (__data_end = __data_end)
-                0x0000000000000778                __data_init_end = LOADADDR (.data)
+                0x0000000000000780                __data_init_end = LOADADDR (.data)
                 [!provide]                        PROVIDE (__data_init_end = __data_init_end)
                 [!provide]                        PROVIDE (__data_size = (__data_end - __data_start))
                 [!provide]                        PROVIDE (__data_init_size = __data_size)
                 [!provide]                        PROVIDE (__data_init_end = (__data_init_start + __data_init_size))
 
-.igot.plt       0x0000000020082038        0x0 load address 0x0000000000000794
+.igot.plt       0x0000000020082038        0x0 load address 0x000000000000079c
  .igot.plt      0x0000000020082038        0x0 funcs.o
                 0x0000000020082038                . = ALIGN (0x4)
                 0x0000000020082038                __heap_start = .

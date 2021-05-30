@@ -28,7 +28,7 @@ def get_data_asm(nodes: List[_nodes.Node], file, curr_name: str="", counts: Dict
 
     elif isinstance(node, _nodes.AssignVar):
         if node.var_type == "STRING":
-            file.write(node.name + ":\n\t.asciz \"" + node.value + "\\n\"\n\n")
+            file.write(node.name + ":\n\t.asciz \"" + node.value + "\"\n\n")
 
         additional_counts = {curr_name: {node.name: [len(counts.get(curr_name, [])) * 4, node.var_type]}}
         # Combine old and additional counts
@@ -89,7 +89,7 @@ def interpret(nodes: List[_nodes.Node], curr_func: str, all_vars: Dict[str, List
             loader = access_local_stack(curr_func, node.lhs, all_vars, "R0", True)
         
         try:
-            loader += "\tMOV R0, #" + str(int(node.rhs)) + "\n"
+            loader += "\tMOV R1, #" + str(int(node.rhs)) + "\n"
         except:
             loader = access_local_stack(curr_func, node.rhs, all_vars, "R1", True)
 
@@ -248,8 +248,7 @@ def interpret(nodes: List[_nodes.Node], curr_func: str, all_vars: Dict[str, List
         # Note what happens
         comment = "@Print\n"
 
-        return_type = list(filter(lambda x: x.var_type if hasattr(x, "var_type") and x.name == node.param_names[0] else None, nodes))
-        return_type = return_type[0].var_type
+        return_type = all_vars[curr_func][node.param_names[0]][1]
         if return_type == "STRING":
             additional_asm = access_local_stack(curr_func, node.param_names[0], all_vars, "R0", True)
             additional_asm += "\tBL print_asciz\n"
@@ -355,9 +354,9 @@ def interpret(nodes: List[_nodes.Node], curr_func: str, all_vars: Dict[str, List
         # Assigning negative numbers is not possible
         # ASM will be as follows:
         if node.var_type == "INT":
-            additional_asm = "MOV R0, #" + str(node.value) + "\n"
+            additional_asm = "\tMOV R0, #" + str(node.value) + "\n"
         elif node.var_type == "STRING":
-            additional_asm = "STR R0, =" + node.name + "\n"
+            additional_asm = "\tLDR R0, =" + node.name + "\n"
         else:
             raise Exception("Unsupported variable type for ASM-compiler in:\n" + node.__repr__())
 
@@ -371,7 +370,7 @@ def interpret(nodes: List[_nodes.Node], curr_func: str, all_vars: Dict[str, List
 def main():
     #TODO: Fix all comments, add explanations for each function and check old ones
     # NO SUPPORT FOR LISTS, NOR ANY, NOR FLOATS; that leaves strings and ints to be used
-    tokens = lex("test_files/test_3.txt")
+    tokens = lex("test_files/test_4.txt")
     AST_segments = Parser(tokens).get_AST().segments
 
     # Clear file
