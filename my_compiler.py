@@ -23,7 +23,7 @@ def merge_dicts(dict1: Dict[str, Dict[str, Tuple[int, str]]], dict2: Dict[str, D
         return merge_dicts(dict1, dict2, keys, {**temp_dict, **newdict}, count + 1)
 
 
-def get_data_asm(nodes: List[_nodes.Node], file: str="", curr_name: str="", var_register: Dict[str, Dict[str, Tuple[int, str]]]={}, 
+def get_all_variables(nodes: List[_nodes.Node], file: str="", curr_name: str="", var_register: Dict[str, Dict[str, Tuple[int, str]]]={}, 
                  node_count: int=0) -> Dict[str, Dict[str, Tuple[int, str]]]:
     ''' Function that creates a dict containing all created variable names
 
@@ -45,17 +45,17 @@ def get_data_asm(nodes: List[_nodes.Node], file: str="", curr_name: str="", var_
     node = nodes[node_count]
     if isinstance(node, _nodes.DefFunc):
         # If the current node defines the creation of a new function
-        in_function_vars = get_data_asm(node.code, file, node.name, var_register)
+        in_function_vars = get_all_variables(node.code, file, node.name, var_register)
         # Combine old and additional var_register
         all_keys = list(set(list(var_register.keys()) + list(in_function_vars.keys())))
         new_vars = merge_dicts(var_register, in_function_vars, all_keys)
 
-        function_params = get_data_asm(node.params, file, node.name, new_vars)
+        function_params = get_all_variables(node.params, file, node.name, new_vars)
         # Combine old and additional var_register
         all_keys = list(set(list(new_vars.keys()) + list(function_params.keys())))
         newer_vars = merge_dicts(new_vars, function_params, all_keys)
 
-        return get_data_asm(nodes, file, curr_name, newer_vars, node_count + 1)
+        return get_all_variables(nodes, file, curr_name, newer_vars, node_count + 1)
 
     elif isinstance(node, _nodes.AssignVar):
         # If the current node defines a new variable
@@ -68,20 +68,20 @@ def get_data_asm(nodes: List[_nodes.Node], file: str="", curr_name: str="", var_
         all_keys = list(set(list(var_register.keys()) + list(additional_counts.keys())))
         new_vars = merge_dicts(var_register, additional_counts, all_keys)
 
-        return get_data_asm(nodes, file, curr_name, new_vars, node_count + 1)
+        return get_all_variables(nodes, file, curr_name, new_vars, node_count + 1)
 
     elif isinstance(node, _nodes.WhileNode) or isinstance(node, _nodes.IfNode):
         # If the current node defines a set of code within a if-statement or while-loop
-        additional_counts = get_data_asm(node.code, file, curr_name, var_register)
+        additional_counts = get_all_variables(node.code, file, curr_name, var_register)
 
         # Combine old and additional var_register
         all_keys = list(set(list(var_register.keys()) + list(additional_counts.keys())))
         new_vars = merge_dicts(var_register, additional_counts, all_keys)
         
-        return get_data_asm(nodes, file, curr_name, new_vars, node_count + 1)
+        return get_all_variables(nodes, file, curr_name, new_vars, node_count + 1)
 
     else:
-        return get_data_asm(nodes, file, curr_name, var_register, node_count + 1)
+        return get_all_variables(nodes, file, curr_name, var_register, node_count + 1)
 
 
 def access_local_stack(curr_scope: str, var_name: str, all_vars: Dict[str, Dict[str, Tuple[int, str]]], register: str, load: bool) -> str:
@@ -89,7 +89,7 @@ def access_local_stack(curr_scope: str, var_name: str, all_vars: Dict[str, Dict[
 
     curr_scope: The name of the current local scope in which the variable is desired.
     var_name: The name of the desired variable.
-    all_vars: A dict containing all of the variables within the code. (The return value of get_data_asm())
+    all_vars: A dict containing all of the variables within the code. (The return value of get_all_variables())
     register: The register where a variable is stored in, or from which to store in the stack.
     load: A bool with which a choice between loading into or storing from the selected register can be made.
     return: A string containing the generated line of code.
@@ -113,7 +113,7 @@ def compile_to_ASM(file: str, AST_segments: List[_nodes.Node]) -> None:
     f.close()
 
     # Get ASM (and write string variables into file)
-    all_vars = get_data_asm(AST_segments, file, "main")
+    all_vars = get_all_variables(AST_segments, file, "main")
     asm = compile(AST_segments, "main", all_vars)
 
     # Write the rest of the code
@@ -130,7 +130,7 @@ def compile(nodes: List[_nodes.Node], curr_scope: str, all_vars: Dict[str, List[
 
     nodes: A list containing  all of the nodes, and thus code, that needs to be turned to .asm.
     curr_scope: A string showing the current scope in which code is being translated to .asm.
-    all_vars: A dict containing all of the variables within the code. (The return value of get_data_asm())
+    all_vars: A dict containing all of the variables within the code. (The return value of get_all_variables())
     node_count: A counter that keeps track of where in the list of nodes the function is.
     asm: The up to now written .asm code.
     return: All of the written .asm code.

@@ -38,8 +38,8 @@ Een voorbeeld hiervan is te vinden in [test_2.txt op regel 59](/test_files/test_
 3. Kies of de geselecteerde test-code ge-interpret of ge-compiled moet worden. Voor het interpreten zie Stap 4, voor het compilen zie Stap 5 en wat daarna volgt.
 4. Als de code ge-interpret moet worden, zie je de resultaten van eventuele print-functies direct in de terminal verschijnen. Nu ben je klaar met het interpreten van de code.
 5. Als de code ge-compiled moet worden, verschijnt er een bestand genaamd main.asm met de gecompilede .asm code erin.
-6. Deze code kan op de Arduino Due gezet worden door middel van de [Makefile](/Makefile) die erbij zit. Deze kan gebruik worden door "make run" aan te roepen binnen de map met beiden de Makefile en main.asm. (Ik had hier zelf wat problemen met het vinden van de Due(op Linux), en moest ook nog [deze code](/Makefile#2) uitvoeren.)
-7. Als de code correct geupload is naar de Due, zullen de resultaten van de code (eventuele print functies) weergegeven worden in de terminal waar "make run" uitgevoerd is.
+6. Deze code kan op de Arduino Due gezet worden door middel van de [Makefile](/Makefile) die erbij zit. Dit doe je door "make run" aan te roepen binnen de map met beiden de Makefile en main.asm. (Ik had hier zelf wat problemen met het verbinden met de Due (op Linux), en moest ook nog [deze code](/Makefile#2) uitvoeren.)
+7. Als de code correct geupload is naar de Due, zullen de resultaten van de code (eventuele print functies) weergegeven worden in de terminal waar "make run" uitgevoerd is. Nu ben je klaar met het compilen, uploaden en het executen van de code.
 
 ## Extra opmerkingen over de taal
 * Ik ben matiger in Pools dan ik mij herriner, als dat wordt gecombineerd met het rijmend proberen te maken van de tekst gaat dat niet goed. Ik raad daarom aan om de tekst niet te vertalen.
