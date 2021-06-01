@@ -78,6 +78,7 @@ class WhileNode(Node):
     def __init__(self, id:int, condition: List[str], code: List[Node]) -> None:
         ''' Inits the class
 
+        id: A unique ID that is based on the location of the while-loop within the code
         condition: A list containing the condition that needs to be true in order to contain looping
         code: A list of nodes that are to be executed if the condition is true
         '''
@@ -103,6 +104,7 @@ class IfNode(Node):
     def __init__(self, id:int, condition: List[str], code: List[Node]) -> None:
         ''' Inits the class
 
+        id: A unique ID that is based on the location of the if-statement within the code
         condition: A list containing the condition that needs to be true in order to run the given code
         code: A list of nodes that are to be executed if the condition is true
         '''
